@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            PocketSDR
+        </ion-title>
+        <button ion-button menuToggle right>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <!-- TODO: add help 
+        <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
+        -->
+    </ion-toolbar>
+    <ion-navbar>
+        <ion-title>Add a Company</ion-title> 
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <form [formGroup]="APILogin">
+      <ion-item>
+        <ion-label color="primary">Company Name</ion-label>
+        <ion-input type="text" value="" formControlName="CompanyName" autocomplete="off" autocorrect="off" autocapitalize="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary">Username</ion-label>
+        <ion-input type="text" value="" formControlName="Username" autocomplete="off" autocorrect="off" autocapitalize="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary">Shared Secret</ion-label>
+        <ion-input type="text" value="" formControlName="SharedSecret" autocomplete="off" autocorrect="off" autocapitalize="off"></ion-input>
+      </ion-item>
+    </form>
+
+  </ion-list>
+
+  <div class="padding">
+	    <button ion-button secondary (click)="loginAPI(APILogin)">
+	      Get my list of report suites
+	    </button>
+    </div>
+
+</ion-content>

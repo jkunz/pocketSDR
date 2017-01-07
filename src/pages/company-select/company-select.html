@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            v7 PocketSDR
+        </ion-title>
+        <button ion-button menuToggle right>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <!-- TODO: add help 
+        <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
+        -->
+    </ion-toolbar>
+    <ion-navbar>
+        <ion-title>Company Selection</ion-title> 
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div>The key is: {{key}}</div>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of companies" #slidingItem>
+      <ion-item>
+        {{item}}
+      </ion-item>
+      <ion-item-options>
+        <button danger (click)="deleteItem(item,slidingItem)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+
+<!-- TODO: add in filter bar -->
