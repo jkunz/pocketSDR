@@ -1,19 +1,29 @@
 import { Component } from '@angular/core';
-import { NavController , AlertController, NavParams } from 'ionic-angular';
+import { NavController , AlertController, Events } from 'ionic-angular';
 import { StorageService } from '../services/storage';
+import { RsSelectPage } from '../rs-select/rs-select';
+
+declare var require: any;
+const localforage: LocalForage = require("localforage");
 
 @Component({
   selector: 'page-company-select',
   templateUrl: 'company-select.html'
 })
-export class CompanySelectPage {
-  companies : string[];
-  key:any;
 
-  constructor(public navCtrl: NavController, private alertController: AlertController, private storageService : StorageService, public navParams: NavParams) {
-            this.companies=storageService.companies;
-            this.key = navParams.get('key')
-  }
+export class CompanySelectPage {
+  companies : any;
+
+    constructor(public navCtrl: NavController, public alertController: AlertController, public storageService : StorageService, public events:Events) {
+       
+    }
+
+    goToRsSelect(company){
+        this.storageService.currentCompany=company
+        this.storageService.addToStorageSimple("currentCompany",company)
+        this.events.publish('showPage:RSList', true);
+        this.navCtrl.push(RsSelectPage);
+    }
 
   //DELETE ITEM
   public deleteItem(item,slidingItem) {
@@ -32,7 +42,7 @@ export class CompanySelectPage {
               {
                   text: "Yes",
                   handler: () => {
-                    this.storageService.deleteFromStorage('companies',item);
+                    //this.storageService.deleteFromStorage('companies');
                     this.companies=this.storageService.companies;
                   }
               }
@@ -40,4 +50,9 @@ export class CompanySelectPage {
       });
       alert.present();
   }  
+
+    ionViewWillEnter() { 
+        localforage.getItem("currentCompany").then(result => this.storageService.currentCompany = result ? <Object> result : {});
+        return localforage.getItem("companies").then(result => this.companies = result ? <Array<Object>> result : []);
+    }
 }

@@ -15,108 +15,28 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-.classic-list {
-  width: 90%;
-  margin: 10px auto;
-}
-.classic-list ul {
-  margin-top: 10px;
-}
-.classic-list ul li {
-  text-align: left; 
-  list-style: disc;
-  margin: 10px 0px;
-}
-.italic{
-	font-style:italic;
-}
-
-.pretend-input{
-	padding-left:0px !important;
-}
-
-#crumbs {
-	text-align: center;
-	width:100%
-}
-	#crumbs ul {
-		list-style: none;
-		display: inline-table;
-	}
-		#crumbs ul li {
-			display: inline;
-		}
-	
-		#crumbs ul li a {
-			display: block;
-			float: left;
-			height: 34px;
-			text-align: center;
-			padding: 8px 2px 0 20px;
-			position: relative;
-			margin: 0 6px 0 0; 
-			font-size: 16px;
-			text-decoration: none;
-			color: #fff;
-		}
-			#crumbs ul li a:after {
-				content: "";  
-				border-top: 17px solid transparent;
-				border-bottom: 17px solid transparent;
-				position: absolute; right: -14px; top: 0;
-				z-index: 1;
-			}
-
-			#crumbs ul li:first-child a {
-				background: #3366ff;
-			}
-
-			#crumbs ul li:first-child a:after {
-				border-left: 15px solid #3366ff;
-			}
-
-			#crumbs ul li:nth-child(2) a {
-				background: #0039e6;
-			}
-
-			#crumbs ul li:nth-child(2) a:after {
-				border-left: 15px solid #0039e6;
-			}
-
-			#crumbs ul li:nth-child(3) a {
-				background: #002db3;
-			}
-			
-			#crumbs ul li a:before {
-				content: "";  
-				border-top: 17px solid transparent;
-				border-bottom: 17px solid transparent;
-				border-left: 15px solid #fff;
-				position: absolute; left: 0; top: 0;
-			}
-	
-				#crumbs ul li:first-child a {
-					border-top-left-radius: 10px; border-bottom-left-radius: 10px;
-				}
-				#crumbs ul li:first-child a:before {
-					display: none; 
-				}
-				
-				#crumbs ul li:last-child a {
-					padding-right: 10px;
-					border-top-right-radius: 10px; border-bottom-right-radius: 10px;
-				}
-				#crumbs ul li:last-child a:after {
-					display: none; 
-				}
-		
-.popover {
-    height: auto !important;
-}
-.popover ion-header-bar {
-    position: relative;
-}
-.popover ion-content {
-    top: 0;
-    position: relative;
+.button-group {
+  .ion-col {
+    &:first-child:not(:last-child) {
+      padding-right: 0;
+      .button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    &:not(:first-child):not(:last-child) {
+      padding-right: 0;
+      padding-left: 0;
+      .button {
+        border-radius: 0;
+      }
+    }
+    &:last-child:not(:first-child) {
+      padding-left: 0;
+      .button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
 }

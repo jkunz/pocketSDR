@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            PocketSDR
+        </ion-title>
+        <button ion-button menuToggle right>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <!-- TODO: add help 
+        <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
+        -->
+    </ion-toolbar>
+    <ion-navbar>
+        <ion-title>Select a Variable</ion-title> 
+    </ion-navbar>
+    <ion-navbar color="light">
+        <ion-title>Company>RS>Var</ion-title> 
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list> 
+        <ion-item *ngFor="let variable of listVariables" (click)="clickVar(variable)">
+            <h2 class="story-title">{{variable.name}}</h2> 
+        </ion-item>
+    </ion-list>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar color="light">
+    <ion-searchbar
+        [showCancelButton]="shouldShowCancel"
+        (ionInput)="getItems($event)"
+        (ionCancel)="onCancel($event)">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-footer>

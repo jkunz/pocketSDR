@@ -1,68 +1,111 @@
-import { NativeStorage } from 'ionic-native';
+import { Events } from 'ionic-angular';
+import { Injectable } from '@angular/core';
 
+declare var require: any;
+const localforage: LocalForage = require("localforage");
+
+@Injectable()
 export class StorageService {
-
     //COMPANY LIST
     //set the company list
-    companies:string[];
-    tempCompany:string;
-    tempUsername:string;
-    tempSharedSecret:string;
+    currentCompany:any;
+    currentUsername:any;
+    currentSharedSecret:any;
+    currentRS:any;
+    currentVar:any;
 
-    constructor(){
-        //for dev:
-        this.companies=['company1','company2'];
 
-        //for prod:
-        //this.companies=this.readStorage('companies')
-    }
+    companies:any;
+    companyData:any;
 
-    readStorage(readList){
-        let varHolder=this[readList];
-        NativeStorage.getItem(readList).then((d)=>{
-            console.log('retrieved ' + readList + ' list',d);
-            varHolder=JSON.parse(d)
-        },(e)=>{
-            console.log('unable to retrieve ' + readList + ' list',e);
-        });
-        return varHolder
-    }
+    /*
+    currentCompany
+    currentUsername
+    currentSharedSecret
+    currentRS
+    currentVar
+    
+    companies
+    companyData   
+        [company]
+            companyName    
+            companyUser
+            companySecret
+            reportsuites //full suite list
+                lastUpdated
+                rsid
+                site_title
+            researchedSuites
 
-    addToStorage(addTo,addedItem){
-        let varHolder=[this[addTo]];
-        NativeStorage.getItem(addTo).then((d)=>{
-            varHolder=JSON.parse(d);
-            console.log('retrieved ' + addTo + ' list',d);
-        },(e)=>{
-            console.log('unable to retrieve ' + addTo + ' list',e);
-        });
+    */
 
-        varHolder.push(addedItem)
-        this[addTo]=varHolder
+    constructor(public events:Events){
 
-        NativeStorage.setItem(addTo,JSON.stringify(varHolder)).then((d)=>{
-            console.log('added ' + addedItem + ' to ' + addTo + ' list',d);
-        },(e)=>{
-            console.log('unable to add ' + addedItem + ' to ' + addTo + ' list',e);
-        })
-
-    }
-
-    deleteFromStorage(deleteFrom,deletedItem){
-        let varHolder=this.readStorage(deleteFrom);
-
-        var index = this.companies.indexOf(deletedItem, 0);
-        if (index > -1) {
-            varHolder.splice(index, 1);
-        };
-        this[deleteFrom]=varHolder
-
-        NativeStorage.setItem(deleteFrom,JSON.stringify(varHolder)).then((d)=>{
-            console.log('updated ' + deleteFrom + ' list',d);
-        },(e)=>{
-            console.log('unable to update ' + deleteFrom + ' list',e);
+        localforage.getItem('currentCompany').then((result) => {
+            this.currentCompany=result
+            if(result){this.events.publish('showPage:RSList', true)}
+        }, (error) => {
+            console.log("ERROR: ", error);
         });
 
+        localforage.getItem('currentRS').then((result) => {
+            this.currentRS=result
+            if(result){this.events.publish('showPage:VarList', true)}
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
+
+        localforage.getItem('currentVar').then((result) => {
+            this.currentCompany=result
+            if(result){this.events.publish('showPage:varData', true)}
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
+
+        this.companies=this.convert2Array(this.readStorage("companies"))
+        this.companyData=this.readStorage("companyData")
+        this.currentVar=this.readStorage("currentVar")
 
     }
-}          
+
+     convert2Array(val) {
+         return Array.from(val);
+     }
+
+    addToStorageSimple(name,value){
+        this[name]=value
+        localforage.setItem(name,value)
+    }
+
+    addToStorageArray(name,value){
+        this[name].push(value)
+        localforage.setItem(name,this[name])
+    }
+
+    addToStorageComplex(db,name,value){
+        this[db][name]=value
+        localforage.setItem(db,this[db])
+    }
+
+    readStorage(name){
+        let returnedData={};
+        localforage.getItem(name).then((result) => {
+            returnedData = result ? <Array<Object>> result : [];
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
+        return returnedData
+    }
+
+    //TO-DO: needs more work/validation
+    deleteFromStorage(db,name,item){
+        let returnedData={}
+        localforage.getItem(db).then((result) => {
+            returnedData = result ? <Array<Object>> result : [];
+            returnedData[name].remove(item)
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
+    }
+
+}   

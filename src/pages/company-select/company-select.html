@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-title>
-            v7 PocketSDR
+            PocketSDR
         </ion-title>
         <button ion-button menuToggle right>
           <ion-icon name="menu"></ion-icon>
@@ -16,11 +16,10 @@
 </ion-header>
 
 <ion-content padding>
-  <div>The key is: {{key}}</div>
-  <ion-list>
-    <ion-item-sliding *ngFor="let item of companies" #slidingItem>
-      <ion-item>
-        {{item}}
+  <ion-list *ngIf="companies">
+    <ion-item-sliding *ngFor="let company of companies" #slidingItem>
+      <ion-item (click)="goToRsSelect(company)">
+        {{company}}
       </ion-item>
       <ion-item-options>
         <button danger (click)="deleteItem(item,slidingItem)">

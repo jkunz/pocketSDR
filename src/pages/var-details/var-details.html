@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            PocketSDR
+        </ion-title>
+        <button ion-button menuToggle right>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <!-- TODO: add help 
+        <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
+        -->
+    </ion-toolbar>
+    <ion-navbar>
+        <ion-title>Variable Details</ion-title> 
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list> 
+        <ion-card *ngFor="let attribute of varAttributes">
+            <ion-item-divider>
+				{{attribute.name}}
+			</ion-item-divider>
+            <ion-item text-wrap>
+                {{attribute.value}}
+            </ion-item>
+        </ion-card>
+    </ion-list>
+</ion-content>

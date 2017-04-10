@@ -1,0 +1,62 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>
+            PocketSDR
+        </ion-title>
+        <button ion-button menuToggle right>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <!-- TODO: add help 
+        <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
+        -->
+    </ion-navbar>
+   <!-- <ion-toolbar color="secondary">
+        <ol id="breadcrumbs">
+            <li>
+                <a href="#">{{currentCompany}}<span class="arrow"></span></a>
+            </li>
+             <li>
+                <a href="#" class="odd">Select Report Suite</a>
+            </li>
+        </ol>
+        <ion-segment>
+            <ion-segment-button value="{{currentCompany}}">{{currentCompany}}</ion-segment-button>
+            <ion-segment-button value="Select Report Suite">Select Report Suite</ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>-->
+    <ion-tabs>
+        <ion-tab [root]="tab1Root"></ion-tab>
+        <ion-tab [root]="tab2Root"></ion-tab>
+        <ion-tab [root]="tab3Root"></ion-tab>
+    </ion-tabs>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list> 
+        <ion-item-sliding *ngFor="let rs of listSuites" #slidingItem>
+        <ion-item  (click)="clickRS(rs.rsid)">
+            <h2 class="story-title">{{rs.site_title}}</h2> 
+            <p>{{rs.rsid}}</p> 
+            <!--<span ng-show="rs.lastUpdated" class="italic">Last updated: {{rsid.lastUpdated}}</span>
+            <span ng-show="!rsid.lastUpdated" class="italic">Never Updated</span></p>
+            <ion-option-button class="button-calm ion-refresh icon-right" ng-click="rsSelected(rsid.rsid,'refresh')">Refresh from API</ion-option-button>-->
+        </ion-item><ion-item-options>
+        <button danger (click)="refreshItem(item,slidingItem)">
+          <ion-icon name="refresh"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ion-list>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar color="light">
+    <ion-searchbar
+        [showCancelButton]="shouldShowCancel"
+        (ionInput)="getItems($event)"
+        (ionCancel)="onCancel($event)">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-footer>
