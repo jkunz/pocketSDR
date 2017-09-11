@@ -1,0 +1,33 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-plugin-nativestorage": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.digitaldatatactics.pocketsdr"
+        }
+    },
+    "dependent_plugins": {}
+}
