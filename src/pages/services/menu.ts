@@ -1,6 +1,5 @@
 import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
-import { StorageService } from './storage';
 
 @Injectable()
 export class MenuService {

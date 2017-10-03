@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 declare var require: any;
 const localforage: LocalForage = require("localforage");
 
+//https://github.com/localForage/localForage and http://localforage.github.io/localForage/
+
 @Injectable()
 export class StorageService {
     //COMPANY LIST
@@ -62,7 +64,9 @@ export class StorageService {
             console.log("ERROR: ", error);
         });
 
-        this.companies=this.convert2Array(this.readStorage("companies"))
+
+        console.log("storageService controller setting companies")
+        this.companies=localforage.getItem("companies").then(result => this.companies = result ? <Array<Object>> result : []);
         this.companyData=this.readStorage("companyData")
         this.currentVar=this.readStorage("currentVar")
 
@@ -78,8 +82,20 @@ export class StorageService {
     }
 
     addToStorageArray(name,value){
-        this[name].push(value)
-        localforage.setItem(name,this[name])
+        localforage.getItem(name).then(result => {
+            if(result){
+                this[name] = result ? <Array<Object>> result : []  
+            }else{
+                this[name] = []
+            }
+
+            this[name].push(value)
+            localforage.setItem(name,this[name])
+        }, (error) => {
+            console.log("ERROR: ", error);
+        }
+
+        )
     }
 
     addToStorageComplex(db,name,value){
@@ -98,11 +114,14 @@ export class StorageService {
     }
 
     //TO-DO: needs more work/validation
-    deleteFromStorage(db,name,item){
+    deleteFromStorage(name,item){
         let returnedData={}
-        localforage.getItem(db).then((result) => {
+        localforage.getItem(name).then((result) => {
             returnedData = result ? <Array<Object>> result : [];
-            returnedData[name].remove(item)
+            console.log("returnedData: ")
+            console.log(returnedData)
+            //local
+            //returnedData.remove(item)
         }, (error) => {
             console.log("ERROR: ", error);
         });

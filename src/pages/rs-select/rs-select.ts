@@ -81,6 +81,9 @@ export class RsSelectPage {
             rsid
           ]
         }
+
+    console.log("rsid:" + rsid) 
+
     this.apiService.hitAPI('ReportSuite.GetEvars',params)              
             .subscribe(result => {
                 let enabledVariables=[]

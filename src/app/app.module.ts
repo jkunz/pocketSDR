@@ -7,7 +7,6 @@ import { CompanyLoginPage } from '../pages/company-login/company-login';
 import { RsSelectPage } from '../pages/rs-select/rs-select';
 import { HttpModule } from '@angular/http';
 import { HttpService } from '../pages/services/http.service';
-import { StorageService } from '../pages/services/storage';
 import { VarDetailsPage } from '../pages/var-details/var-details';
 import { VarSelectPage } from '../pages/var-select/var-select';
 

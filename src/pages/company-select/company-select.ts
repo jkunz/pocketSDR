@@ -26,7 +26,7 @@ export class CompanySelectPage {
     }
 
   //DELETE ITEM
-  public deleteItem(item,slidingItem) {
+  public deleteItem(company,slidingItem) {
       let alert = this.alertController.create({
           title: "Confirm Deletion",
           message: "Are you sure you want to permanently delete this company?",
@@ -42,8 +42,23 @@ export class CompanySelectPage {
               {
                   text: "Yes",
                   handler: () => {
-                    //this.storageService.deleteFromStorage('companies');
+                    //first, remove it from the array of companies (localForage remove won't work because that removes the value of a key)
                     this.companies=this.storageService.companies;
+                    var index=this.companies.indexOf(company)
+                    this.companies.splice(index, 1);
+                    this.storageService.addToStorageSimple("companies",this.companies)
+
+                    //then, remove it from companyData
+                    var localCompanyData=this.storageService.companyData
+                    console.log("localCompanyData before: ", localCompanyData)
+                    delete localCompanyData[company]
+                    console.log("localCompanyData after: ", localCompanyData)
+                    this.storageService.addToStorageSimple("companyData",localCompanyData)
+
+                    //and from currentCompany
+                    this.storageService.addToStorageSimple("currentCompany","")
+                    this.storageService.addToStorageSimple("currentVar","")
+                    this.storageService.addToStorageSimple("currentRS","")
                   }
               }
           ]

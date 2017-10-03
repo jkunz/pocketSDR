@@ -41,16 +41,16 @@ export class MyApp {
     });
 
     this.pages = [
+      { title: 'Add/Update Company', component: CompanyLoginPage },
       { title: 'Company Selection', component: CompanySelectPage },
-      { title: 'Company Login', component: CompanyLoginPage },
-      { title: 'Report Suites', component: RsSelectPage },
+      { title: 'Report Suite Selection', component: RsSelectPage },
       { title: 'Variables', component: VarSelectPage },
       { title: 'Variable Details', component: VarDetailsPage },
     ];
 
     this.showPages={}
     this.showPages['Company Selection']=true
-    this.showPages['Company Login']=true
+    this.showPages['Add/Update Company']=true
 
     this.events.subscribe('showPage:RSList', data => {
       this.showPages['Report Suites']=data
