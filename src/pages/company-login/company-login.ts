@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, AlertController, Events } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, AlertController, Events, Nav } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiService } from '../services/api';
 import { HttpService } from '../services/http.service';
 import { StorageService } from '../services/storage';
+import { TabsPage } from '../tabs/tabs';
 import { RsSelectPage } from '../rs-select/rs-select';
 
 @Component({
@@ -17,7 +18,7 @@ export class CompanyLoginPage {
   loginUsername:string;
   loginSecret:string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public apiService: ApiService, public storageService: StorageService, public loadingCtrl : LoadingController, public alertCtrl: AlertController, public httpService: HttpService, public events:Events ) {
+  constructor(public navCtrl: NavController, public nav: Nav, public navParams: NavParams, public formBuilder: FormBuilder, public apiService: ApiService, public storageService: StorageService, public loadingCtrl : LoadingController, public alertCtrl: AlertController, public httpService: HttpService, public events:Events ) {
     let paramsKey=decodeURI(navParams.get('key'));
     this.loginSecret="ee9be22adfd8f4db4c3570784e55845d"
     this.loginUsername="jkunz:Jennifer Kunz"
@@ -86,7 +87,7 @@ export class CompanyLoginPage {
                 loading.dismiss();
                 
                 this.events.publish('showPage:RSList', true);
-                this.navCtrl.setRoot(RsSelectPage);
+                this.nav.setRoot(TabsPage, { index: '1' });
 
             }, error => {
                 loading.dismiss();

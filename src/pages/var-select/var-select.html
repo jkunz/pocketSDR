@@ -13,9 +13,6 @@
     <ion-navbar>
         <ion-title>Select a Variable</ion-title> 
     </ion-navbar>
-    <ion-navbar color="light">
-        <ion-title>Company>RS>Var</ion-title> 
-    </ion-navbar>
 </ion-header>
 
 
@@ -23,6 +20,7 @@
     <ion-list> 
         <ion-item *ngFor="let variable of listVariables" (click)="clickVar(variable)">
             <h2 class="story-title">{{variable.name}}</h2> 
+            <p>{{variable.id}}</p> 
         </ion-item>
     </ion-list>
 </ion-content>

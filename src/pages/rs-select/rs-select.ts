@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, AlertController, Events } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, AlertController, Events, Nav } from 'ionic-angular';
 import { StorageService } from '../services/storage';
 import { ApiService } from '../services/api';
 import { HttpService } from '../services/http.service';
 import { MenuService } from '../services/menu';
 import { VarSelectPage } from '../var-select/var-select';
+import { TabsPage } from '../tabs/tabs';
 
 declare var require: any;
 const localforage: LocalForage = require("localforage");
@@ -20,7 +21,7 @@ export class RsSelectPage {
   listSuites:any;
   menu:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageService, public httpService:HttpService, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public apiService: ApiService, public events:Events) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public nav:Nav, public storageService: StorageService, public httpService:HttpService, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public apiService: ApiService, public events:Events) {
   
   }
 
@@ -28,7 +29,8 @@ export class RsSelectPage {
       this.events.publish('showPage:varList', true);
       this.storageService.currentRS=rsid
       this.storageService.addToStorageSimple("currentRS",rsid)
-      this.navCtrl.push(VarSelectPage);
+      this.navCtrl.parent.select(2); //parent is the tabs page; it's the 3rd in the array ("2" in javascript terms)
+      this.nav.setRoot(TabsPage, { index: 2 });//parent is the tabs page; it's the 3rd in the array ("2" in javascript terms)
   }
 
   search(nameKey, myArray){

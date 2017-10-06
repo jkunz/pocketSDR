@@ -44,7 +44,7 @@ export class VarSelectPage {
   }
 
   clickVar(varData){
-    this.events.publish('showPage:varData', true);
+    this.storageService.addToStorageSimple("currentVar",varData)
     this.navCtrl.push(VarDetailsPage,{thisVariable:varData})
   }  
 

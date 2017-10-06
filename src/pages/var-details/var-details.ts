@@ -1,6 +1,9 @@
 import { Component,PipeTransform,Pipe } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { StorageService } from '../services/storage';
+
+declare var require: any;
+const localforage: LocalForage = require("localforage");
 
 @Component({
   selector: 'page-var-details',
@@ -11,9 +14,11 @@ export class VarDetailsPage {
   varDetail:any;
   varAttributes:any[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageService) {
-    this.varDetail = navParams.get('thisVariable'); 
+  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageService, public events:Events) {
+    this.varDetail = navParams.get('thisVariable') ? navParams.get('thisVariable') : storageService.readStorage("currentVar")
     this.varAttributes=[]
+
+    this.events.publish('showPage:varData', true);
 
     console.log("this.varDetail:")
     console.log(this.varDetail)
@@ -26,8 +31,6 @@ export class VarDetailsPage {
 
     console.log("this.varAttributes:")
     console.log(this.varAttributes)
-
-    this.storageService.addToStorageSimple("currentVar",this.varDetail)
   }
 
   cleanString(string){

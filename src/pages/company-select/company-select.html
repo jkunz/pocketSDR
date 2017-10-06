@@ -28,6 +28,9 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  <div class="padding" *ngIf="!companiesShown"><p>You haven't set up any companies yet.</p>
+   <button ion-button secondary [navPush]="companyLoginPage">
+        Log in to a company
+      </button>
+  </div>
 </ion-content>
-
-<!-- TODO: add in filter bar -->

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController , AlertController, Events } from 'ionic-angular';
+import { NavController , AlertController, Events} from 'ionic-angular';
 import { StorageService } from '../services/storage';
 import { RsSelectPage } from '../rs-select/rs-select';
+import { CompanyLoginPage } from '../company-login/company-login';
 
 declare var require: any;
 const localforage: LocalForage = require("localforage");
@@ -13,16 +14,22 @@ const localforage: LocalForage = require("localforage");
 
 export class CompanySelectPage {
   companies : any;
+  companiesShown : any;
+  companyLoginPage = CompanyLoginPage
 
     constructor(public navCtrl: NavController, public alertController: AlertController, public storageService : StorageService, public events:Events) {
-       
+      
     }
 
     goToRsSelect(company){
         this.storageService.currentCompany=company
         this.storageService.addToStorageSimple("currentCompany",company)
         this.events.publish('showPage:RSList', true);
-        this.navCtrl.push(RsSelectPage);
+        this.navCtrl.parent.select(1); //parent is the tabs page; it's the second in the array ("1" in javascript terms)
+    }
+
+    goToCompanyLogin(){
+      this.navCtrl.push("CompanyLoginPage")
     }
 
   //DELETE ITEM
@@ -68,6 +75,9 @@ export class CompanySelectPage {
 
     ionViewWillEnter() { 
         localforage.getItem("currentCompany").then(result => this.storageService.currentCompany = result ? <Object> result : {});
-        return localforage.getItem("companies").then(result => this.companies = result ? <Array<Object>> result : []);
+        return localforage.getItem("companies").then(result => {
+          this.companies = result ? <Array<Object>> result : [];
+          if(this.companies.length!=0){this.companiesShown=true}else{this.companiesShown=false}
+        });
     }
 }

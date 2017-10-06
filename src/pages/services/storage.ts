@@ -52,7 +52,7 @@ export class StorageService {
 
         localforage.getItem('currentRS').then((result) => {
             this.currentRS=result
-            if(result){this.events.publish('showPage:VarList', true)}
+            if(result){this.events.publish('showPage:varList', true)}
         }, (error) => {
             console.log("ERROR: ", error);
         });
