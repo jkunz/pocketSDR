@@ -8,6 +8,7 @@ import { RsSelectPage } from '../pages/rs-select/rs-select';
 import { VarDetailsPage } from '../pages/var-details/var-details';
 import { VarSelectPage } from '../pages/var-select/var-select';
 import { TabsPage } from '../pages/tabs/tabs';
+import { AboutPage } from '../pages/about/about';
 import { HttpModule } from '@angular/http';
 import { HttpService } from '../pages/services/http.service';
 
@@ -19,7 +20,8 @@ import { HttpService } from '../pages/services/http.service';
     RsSelectPage,
     VarSelectPage,
     VarDetailsPage,
-    TabsPage
+    TabsPage,
+    AboutPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -33,7 +35,8 @@ import { HttpService } from '../pages/services/http.service';
     RsSelectPage,
     VarSelectPage,
     VarDetailsPage,
-    TabsPage
+    TabsPage,
+    AboutPage
   ],
   providers: [
     HttpService,

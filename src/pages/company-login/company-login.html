@@ -3,6 +3,9 @@
         <ion-title>
             PocketSDR
         </ion-title>
+        <button ion-button left>
+          <ion-icon name="help-circle" (click)="showTutorial()"></ion-icon>
+        </button>
         <button ion-button menuToggle right>
           <ion-icon name="menu"></ion-icon>
         </button>
@@ -11,7 +14,7 @@
         -->
     </ion-toolbar>
     <ion-navbar>
-        <ion-title>Add a Company</ion-title> 
+        <div text-center style="font-size: 1.8rem">Add a Company</div> 
     </ion-navbar>
 </ion-header>
 
@@ -21,7 +24,7 @@
     <form [formGroup]="APILogin">
       <ion-item>
         <ion-label color="primary">Company Name</ion-label>
-        <ion-input type="text" formControlName="CompanyName" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Tara Plantation"></ion-input>
+        <ion-input type="text" formControlName="CompanyName" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Tara Plantation" (change)="checkIfPresent(APILogin)"></ion-input>
       </ion-item>
 
       <ion-item>
@@ -39,7 +42,8 @@
 
   <div class="padding">
 	    <button ion-button secondary (click)="loginAPI(APILogin)">
-	      Get my list of report suites
+	      <div *ngIf="!currentSuite">Get my list of report suites</div>
+        <div *ngIf="currentSuite">Update my list of report suites</div>
 	    </button>
     </div>
 

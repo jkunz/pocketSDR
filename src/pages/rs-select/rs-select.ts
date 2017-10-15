@@ -3,8 +3,6 @@ import { NavController, NavParams, LoadingController, AlertController, Events, N
 import { StorageService } from '../services/storage';
 import { ApiService } from '../services/api';
 import { HttpService } from '../services/http.service';
-import { MenuService } from '../services/menu';
-import { VarSelectPage } from '../var-select/var-select';
 import { TabsPage } from '../tabs/tabs';
 
 declare var require: any;
@@ -18,11 +16,18 @@ export class RsSelectPage {
   reportSuites:any;
   companyData:any;
   currentCompany:any;
+  shownTutorials:any;
   listSuites:any;
   menu:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public nav:Nav, public storageService: StorageService, public httpService:HttpService, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public apiService: ApiService, public events:Events) {
-  
+        this.shownTutorials=localforage.getItem("shownTutorials").then(result => {
+        this.shownTutorials = result ? <Object> result : {}
+        if(this.storageService.tutorial==true && !this.shownTutorials.includes("RSselect")){
+          this.storageService.addToStorageArray("shownTutorials","RSselect")
+          this.showTutorial()
+        }
+      });
   }
 
   goToRsDetails(rsid){
@@ -58,8 +63,7 @@ export class RsSelectPage {
 
   pullRS(rsid){ 
     let loading = this.loadingCtrl.create({
-        spinner: 'hide',
-        content: 'Pulling info from the Adobe API, please wait... (this takes a little longer)'
+        content: 'Pulling info from the Adobe API, please wait... (this takes a while)'
     });
 
     let alert = this.alertCtrl.create({
@@ -92,6 +96,14 @@ export class RsSelectPage {
 
                 for (var i = 0; i < result[0].evars.length; i++) {
                   if(result[0].evars[i].enabled!=false){
+                    if(result[0].evars[i].type=="text_string"){result[0].evars[i].type="Text String"}
+                    if(result[0].evars[i].id=="trackingcode"){result[0].evars[i].id="campaign"}
+                    result[0].evars[i].id=result[0].evars[i].id.replace("evar","eVar")
+                    if(result[0].evars[i].expirationType=="day"){
+                      result[0].evars[i].expirationType=result[0].evars[i].expiration_custom_days + " days"
+                    }
+                    delete result[0].evars[i].expiration_custom_days
+
                     enabledVariables.push(result[0].evars[i])
                   }
                 }
@@ -106,8 +118,24 @@ export class RsSelectPage {
                     console.log(enabledVariables)
                     this.apiService.hitAPI('ReportSuite.GetEvents',params)   
                       .subscribe(result => {
-                        for (var i = 0; i < result[0].events.length; i++) {
-                          if(result[0].events[i].type!="disabled" && result[0].events[i].id.indexOf('visit')==-1 && result[0].events[i].id.indexOf('instances')==-1 ){
+                        for (var i = 0; i < result[0].events.length; i++) { 
+                          //only grab enabled events, not including instances or visits
+                          if(result[0].events[i].type!="disabled" && result[0].events[i].id.indexOf('visit')==-1 && result[0].events[i].id.indexOf('instances')==-1 && result[0].events[i].id.indexOf('pageviews')==-1 ){
+                            switch (result[0].events[i].id) {
+                              case "cartviews":
+                                result[0].events[i].id="scView"
+                                break;
+                              case "checkouts":
+                                result[0].events[i].id="scCheckout"
+                                break;
+                              case "cartadditions":
+                                result[0].events[i].id="scAdd"
+                                break;
+                              case "cartremovals":
+                                result[0].events[i].id="scRemove"
+                                break;
+                            }
+
                             enabledVariables.push(result[0].events[i])
                           }
                         } 
@@ -119,16 +147,22 @@ export class RsSelectPage {
                           }
                         }
 
-                        let today = new Date();
-                        let dd = today.getDate();
-                        let mm = today.getMonth()+1; //January is 0!
-                        let yyyy = today.getFullYear();
-                        if(dd<10){let ddF='0'+dd.toString()}else{let ddF=dd.toString()}
-                        if(mm<10){let mmF='0'+mm.toString()}else{let mmF=mm.toString()}
-                        let todayF = dd+'/'+mm+'/'+yyyy;
+                          var date=new Date()
+                          var monthNames = [
+                            "January", "February", "March",
+                            "April", "May", "June", "July",
+                            "August", "September", "October",
+                            "November", "December"
+                          ];
+
+                          var day = date.getDate();
+                          var monthIndex = date.getMonth();
+                          var year = date.getFullYear();
+
+                          var lastUpdated=monthNames[monthIndex] + ' ' + day + ', ' + year;
 
                         this.companyData[this.currentCompany].reportSuites[myIndex].variables=enabledVariables
-                        this.companyData[this.currentCompany].reportSuites[myIndex].lastUpdated=todayF
+                        this.companyData[this.currentCompany].reportSuites[myIndex].lastUpdated=lastUpdated
 
                         console.log("companyData with RS vars")
                         console.log(this.companyData[this.currentCompany])
@@ -177,6 +211,21 @@ export class RsSelectPage {
     }
   }
 
+  showTutorial(){
+    console.log("showTutorial opened")
+     let tutorial = this.alertCtrl.create({
+          title: "Tip",
+          message: "Pulling RS data takes time, so by default we only do it once per RS. If you want to get updated variable information, swipe left and hit refresh",
+          buttons: [
+              {
+                  text: "OK",
+                  role: 'cancel',
+              }
+          ]
+      });
+      tutorial.present();
+  } 
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad RsSelectPage');
   }
@@ -185,8 +234,8 @@ export class RsSelectPage {
     return localforage.getItem("companyData").then(result => {
         if(result){
           this.companyData=result
-          console.log("company data results on ionViewWill Enter: ")
-          console.log(result)
+          console.log("company data results on ionViewWill Enter",result)
+          console.log("company data currentCompany", this.storageService.currentCompany)
           this.currentCompany=this.storageService.currentCompany
           this.reportSuites=this.companyData[this.currentCompany].reportSuites ? <Array<Object>> result[this.currentCompany].reportSuites : []
           this.initializeSuites();

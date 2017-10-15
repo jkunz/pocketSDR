@@ -3,6 +3,9 @@
         <ion-title>
             PocketSDR
         </ion-title>
+        <button ion-button left>
+          <ion-icon name="help-circle" (click)="showTutorial(1)"></ion-icon>
+        </button>
         <button ion-button menuToggle right>
           <ion-icon name="menu"></ion-icon>
         </button>
@@ -11,7 +14,7 @@
         -->
     </ion-toolbar>
     <ion-navbar>
-        <ion-title>Company Selection</ion-title> 
+        <div text-center style="font-size: 1.8rem">Choose a company</div> 
     </ion-navbar>
 </ion-header>
 
@@ -22,13 +25,16 @@
         {{company}}
       </ion-item>
       <ion-item-options>
-        <button danger (click)="deleteItem(company,slidingItem)">
+        <button ion-button (click)="refreshCompany(company,slidingItem)">
+          <ion-icon name="refresh"></ion-icon>
+        </button>
+        <button ion-button color="danger" (click)="deleteItem(company,slidingItem)">
           <ion-icon name="trash"></ion-icon>
         </button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  <div class="padding" *ngIf="!companiesShown"><p>You haven't set up any companies yet.</p>
+  <div class="padding" *ngIf="companiesNotShown"><p>You haven't set up any companies yet.</p>
    <button ion-button secondary [navPush]="companyLoginPage">
         Log in to a company
       </button>

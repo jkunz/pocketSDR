@@ -3,7 +3,6 @@ import { NavController, NavParams, Events } from 'ionic-angular';
 import { StorageService } from '../services/storage';
 
 declare var require: any;
-const localforage: LocalForage = require("localforage");
 
 @Component({
   selector: 'page-var-details',
@@ -15,36 +14,36 @@ export class VarDetailsPage {
   varAttributes:any[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageService, public events:Events) {
-    this.varDetail = navParams.get('thisVariable') ? navParams.get('thisVariable') : storageService.readStorage("currentVar")
+    if(navParams.get('thisVariable')){
+      this.varDetail = navParams.get('thisVariable')
+    }else{
+      this.varDetail=this.storageService.currentVar
+    }
+
     this.varAttributes=[]
 
     this.events.publish('showPage:varData', true);
 
-    console.log("this.varDetail:")
-    console.log(this.varDetail)
-
     for (var item in this.varDetail) {
       if(typeof this.varDetail[item]=="string" && this.varDetail[item]!=""){
-        this.varAttributes.push({'name':this.cleanString(item),'value':this.cleanString(this.varDetail[item])})
+        if(item=="id"){
+          this.varAttributes.push({'name':'Variable','value':this.varDetail[item]})        
+        }else{
+          this.varAttributes.push({'name':this.cleanString(item),'value':this.cleanString(this.varDetail[item])})
+        }
       }
     }
-
-    console.log("this.varAttributes:")
-    console.log(this.varAttributes)
   }
 
   cleanString(string){
     string=string.replace(/_/g," ") 
-    
-    if(string=="id"){
-      string="variable"
-    }
 
-    if(string.indexOf("evar")!=-1){
-      string=string.replace("evar","eVar")
-    }else{
+    if(string.indexOf("eVar")==-1){
       string=string.charAt(0).toUpperCase() + string.slice(1);
-    }
+    }   
+    string=string.replace("Allocation type","Allocation") 
+    string=string.replace("Expiration type","Expiration") 
+
     return string
   }
 

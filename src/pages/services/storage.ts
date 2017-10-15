@@ -20,6 +20,9 @@ export class StorageService {
     companies:any;
     companyData:any;
 
+    tutorial:any;
+    shownTutorials:any;
+
     /*
     currentCompany
     currentUsername
@@ -42,6 +45,14 @@ export class StorageService {
     */
 
     constructor(public events:Events){
+        this.tutorial=true;
+
+        localforage.getItem('currentCompany').then((result) => {
+            this.currentCompany=result
+            if(result){this.events.publish('showPage:RSList', true)}
+        }, (error) => {
+            console.log("ERROR: ", error);
+        });
 
         localforage.getItem('currentCompany').then((result) => {
             this.currentCompany=result
@@ -58,16 +69,15 @@ export class StorageService {
         });
 
         localforage.getItem('currentVar').then((result) => {
-            this.currentCompany=result
+            this.currentVar=result
             if(result){this.events.publish('showPage:varData', true)}
         }, (error) => {
             console.log("ERROR: ", error);
         });
 
-
-        console.log("storageService controller setting companies")
-        this.companies=localforage.getItem("companies").then(result => this.companies = result ? <Array<Object>> result : []);
-        this.companyData=this.readStorage("companyData")
+        localforage.getItem("shownTutorials").then(result => this.shownTutorials = result ? <Array<Object>> result : []);
+        localforage.getItem("companies").then(result => this.companies = result ? <Array<Object>> result : []);
+        localforage.getItem("companyData").then(result => this.companyData = result ? <Object> result : {});
         this.currentVar=this.readStorage("currentVar")
 
     }
@@ -91,6 +101,7 @@ export class StorageService {
 
             this[name].push(value)
             localforage.setItem(name,this[name])
+            console.log("addToStorageArray:", name, value)
         }, (error) => {
             console.log("ERROR: ", error);
         }

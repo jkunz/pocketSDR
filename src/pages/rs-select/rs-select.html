@@ -3,6 +3,9 @@
         <ion-title>
             PocketSDR
         </ion-title>
+        <button ion-button left>
+          <ion-icon name="help-circle" (click)="showTutorial()"></ion-icon>
+        </button>
         <button ion-button menuToggle right>
           <ion-icon name="menu"></ion-icon>
         </button>
@@ -10,8 +13,8 @@
         <button ion-button helpToggle left><ion-icon name="help"></ion-icon></button>
         -->
     </ion-toolbar>
-        <ion-navbar>
-        <ion-title>Report Suite Selection</ion-title> 
+    <ion-navbar>
+        <div text-center style="font-size: 1.8rem"><i>{{this.storageService.currentCompany}}</i>: Report Suites</div> 
     </ion-navbar>
 </ion-header>
 
@@ -22,6 +25,7 @@
         <ion-item  (click)="clickRS(rs.rsid)">
             <h2 class="story-title">{{rs.site_title}}</h2> 
             <p>{{rs.rsid}}</p> 
+            <p><span *ngIf="rs.lastUpdated"><i>Last updated: {{rs.lastUpdated}}</i></span><span *ngIf="!rs.lastUpdated"><i>Never updated in this app</i></span></p>
             <!--<span ng-show="rs.lastUpdated" class="italic">Last updated: {{rsid.lastUpdated}}</span>
             <span ng-show="!rsid.lastUpdated" class="italic">Never Updated</span></p>
             <ion-option-button class="button-calm ion-refresh icon-right" ng-click="rsSelected(rsid.rsid,'refresh')">Refresh from API</ion-option-button>-->

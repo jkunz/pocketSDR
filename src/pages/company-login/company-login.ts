@@ -7,6 +7,9 @@ import { StorageService } from '../services/storage';
 import { TabsPage } from '../tabs/tabs';
 import { RsSelectPage } from '../rs-select/rs-select';
 
+declare var require: any;
+const localforage: LocalForage = require("localforage");
+
 @Component({
   selector: 'page-company-login',
   templateUrl: 'company-login.html' 
@@ -17,8 +20,20 @@ export class CompanyLoginPage {
   loginCompany:string;
   loginUsername:string;
   loginSecret:string;
+  currentSuite:boolean;
+  shownTutorials:any;
 
   constructor(public navCtrl: NavController, public nav: Nav, public navParams: NavParams, public formBuilder: FormBuilder, public apiService: ApiService, public storageService: StorageService, public loadingCtrl : LoadingController, public alertCtrl: AlertController, public httpService: HttpService, public events:Events ) {
+
+    this.shownTutorials=localforage.getItem("shownTutorials").then(result => {
+      this.shownTutorials = result ? <Array<Object>> result : [];
+      if(this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin")){
+        this.storageService.addToStorageArray("shownTutorials","companyLogin")
+        this.showTutorial()
+      }
+    });
+
+    this.currentSuite=false
     let paramsKey=decodeURI(navParams.get('key'));
     this.loginSecret="ee9be22adfd8f4db4c3570784e55845d"
     this.loginUsername="jkunz:Jennifer Kunz"
@@ -34,17 +49,24 @@ export class CompanyLoginPage {
         CompanyName: [this.loginCompany],
         Username: [this.loginUsername],
         SharedSecret: [this.loginSecret]
-    });
+    }); 
+  }
 
-    
-  
+  checkIfPresent(inputName){
+    console.log("detected change",inputName.controls.CompanyName.value)
+    if(this.storageService.companies.includes(inputName.controls.CompanyName.value)){
+      this.currentSuite=true
+    }else{
+      this.currentSuite=false
+    }
   }
 
   loginAPI(credentials){ 
-    let loading = this.loadingCtrl.create({
-        spinner: 'hide',
+    const loading = this.loadingCtrl.create({
         content: 'Pulling info from the Adobe API, please wait...'
     });
+
+    loading.present()
 
     let alert = this.alertCtrl.create({
       title: "Something went wrong",
@@ -57,7 +79,14 @@ export class CompanyLoginPage {
       ]
     });
 
-    loading.present()
+    this.storageService.currentRS=""
+    this.storageService.addToStorageSimple("currentRS","")    
+    this.events.publish('showPage:RSList', false);
+    this.storageService.currentVar=""
+    this.storageService.addToStorageSimple("currentVar","")
+    this.events.publish('showPage:varList', false);
+    this.events.publish('showPage:varData', false);
+
 
     //set the username and secret for the API
     this.httpService.currentUsername=credentials.controls.Username.value;
@@ -75,8 +104,9 @@ export class CompanyLoginPage {
                   researchedSuites:[]
                 }
 
-                this.storageService.addToStorageArray("companies",credentials.controls.CompanyName.value);
-                  
+                if(!this.storageService.companies.includes(credentials.controls.CompanyName.value)){
+                  this.storageService.addToStorageArray("companies",credentials.controls.CompanyName.value);
+                }
                 this.storageService.currentCompany=credentials.controls.CompanyName.value;
                 this.storageService.currentUsername=credentials.controls.Username.value;
                 this.storageService.currentSharedSecret=credentials.controls.SharedSecret.value;
@@ -96,6 +126,22 @@ export class CompanyLoginPage {
             }); 
 
   }
+
+  showTutorial(){
+    console.log("showTutorial opened")
+     let tutorial = this.alertCtrl.create({
+          title: "Tip",
+          message: "Don't feel like typing in your 40 character API key on your mobile device? Use the desktop key importer at digitalDataTactics.com/pocketSDR",
+          buttons: [
+              {
+                  text: "OK",
+                  role: 'cancel',
+              }
+          ]
+      });
+      tutorial.present();
+  } 
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CompanyLoginPage');

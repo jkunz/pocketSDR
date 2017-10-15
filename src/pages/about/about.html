@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            PocketSDR
+        </ion-title>
+    </ion-toolbar>
+    <ion-navbar>
+        <div text-center style="font-size: 1.8rem">About This App</div> 
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+	<p>This handy little app uses the Adobe Analytics Admin API to store variable settings on your phone for easy reference. Can't remember what you use event5 for? Tired of looking up which eVars are set to "month" instead of "visit"? Have a gazillion report suites to keep track of? This app can help.</p>
+	<p><i>Note: this app only observes your current settings- this app will not be useful if you want to change or copy settings.</i></p>
+	<p>For more information on getting your Adobe API credentials, or a shortcut to make it easier to transfer credentials to this app, visit <a href="digitalDataTactics.com/pocketSDR/?cid=pocketSDR">digitalDataTactics.com/pocketSDR/</a> (ideally, on a non-mobile browser). </p>
+	<p>PocketSDR was created by Jenn Kunz of <a href="http://www.digitaldatatactics.com/">digitalDataTactics.com</a>, with a few main goals:</p>	
+	<div class="classic-list">
+		<ul>
+			<li>Make it easier for folks to look up a variable's purpose and settings, without going to the Admin Console or documentation.</li>
+			<li>Give me an example to reference to show how to implement DTM in an Angular framework.</li>
+			<li>Give me some hands-on experience implementing Lifecycle Metrics in a mobile app.</li>
+		</ul>
+	</div>
+	<p>It was created using the <a href="https://ionicframework.com/">Ionic 3 framework</a>. Data from the Adobe API is stored on your device using <a href="https://github.com/localForage/localForage">localForage</a> (which makes use of indexedDB and WebSQL). Analytics tracking was implemented using both the Adobe Analytics SDK and Adobe Dynamic Tag Manager. This app is open-source. Feel free to see if you can improve on it.</p>
+	<p>You may also enjoy my <a href="http://digitaldatatactics.com/beaconParser/?cid=pocketSDR">Beacon Parser</a> tool or <a href="http://digitaldatatactics.com/?cid=pocketSDR">my blog</a>.</p>
+	<p>Have feedback? Email me at pocketSDR@digitalDataTactics.com.</p>
+	<p><i>This app is not officially affiliated with Adobe in any way.</i></p>
+</ion-content>
