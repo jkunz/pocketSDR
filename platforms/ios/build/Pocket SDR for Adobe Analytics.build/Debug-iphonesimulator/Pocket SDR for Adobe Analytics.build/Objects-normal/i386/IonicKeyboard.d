@@ -1,11 +1,12 @@
 dependencies: \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/Pocket\ SDR\ for\ Adobe\ Analytics/Plugins/ionic-plugin-keyboard/IonicKeyboard.m \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/Pocket\ SDR\ for\ Adobe\ Analytics/Plugins/ionic-plugin-keyboard/IonicKeyboard.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVAvailabilityDeprecated.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/build/emulator/include/Cordova/CDVWebViewEngineProtocol.h
+  /Users/jenn/projects/pocketSDR/platforms/ios/Pocket\ SDR\ for\ Adobe\ Analytics/Pocket\ SDR\ for\ Adobe\ Analytics-Prefix.pch \
+  /Users/jenn/projects/pocketSDR/platforms/ios/Pocket\ SDR\ for\ Adobe\ Analytics/Plugins/ionic-plugin-keyboard/IonicKeyboard.m \
+  /Users/jenn/projects/pocketSDR/platforms/ios/Pocket\ SDR\ for\ Adobe\ Analytics/Plugins/ionic-plugin-keyboard/IonicKeyboard.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVAvailabilityDeprecated.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
+  /users/jenn/projects/pocketSDR/platforms/ios/build/emulator/include/Cordova/CDVWebViewEngineProtocol.h

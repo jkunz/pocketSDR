@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
+  <script data-ionic="inject">
+    (function(w){var i=w.Ionic=w.Ionic||{};i.version='2.0.0-rc.4';i.angular='2.2.1';i.ionicNative='^2.2.11';i.staticDir='build/';})(window);
+  </script>
   <meta charset="UTF-8">
   <title>PocketSDR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,7 +15,10 @@
   <meta name="theme-color" content="#4e8ef7">
   
   <!--DTM staging library, switch to prod for publish-->
-  <script src="https://assets.adobedtm.com/796c064ab8699f0e6ce16cbfe60d77bd1b236e5d/satelliteLib-61920bc453ca4d64ffde9c14c972f039462bfcda-staging.js"></script>
+  <script type="JavaScript">
+    window.digitalData={};
+  </script>
+  <script src="https://assets.adobedtm.com/d3e04e6c6876c18339561614966501e182c5eb8e/satelliteLib-bdf17c53ce4a130464bb02ad78e0d0d70eaeb482-staging.js"></script>
   
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>

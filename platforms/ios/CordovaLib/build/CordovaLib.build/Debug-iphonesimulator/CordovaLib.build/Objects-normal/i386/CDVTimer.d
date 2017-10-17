@@ -1,3 +1,4 @@
 dependencies: \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/CordovaLib/Classes/Public/CDVTimer.m \
-  /Users/jkunz/projects/pocketSDRv3/platforms/ios/CordovaLib/Classes/Public/CDVTimer.h
+  /Users/jenn/projects/pocketSDR/platforms/ios/CordovaLib/CordovaLib_Prefix.pch \
+  /Users/jenn/projects/pocketSDR/platforms/ios/CordovaLib/Classes/Public/CDVTimer.m \
+  /Users/jenn/projects/pocketSDR/platforms/ios/CordovaLib/Classes/Public/CDVTimer.h
