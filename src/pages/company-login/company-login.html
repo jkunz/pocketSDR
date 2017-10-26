@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+      <ion-buttons start>
+        <button ion-button left>
+          <ion-icon name="help-circle"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title>
+          PocketSDR
+      </ion-title>
+      <button ion-button menuToggle right>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+  </ion-toolbar>
+  <ion-navbar>
+    <div text-center style="font-size: 1.8rem">Add/Update a Company</div>  
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <form [formGroup]="APIlogin">
+      <ion-item>
+        <ion-label color="primary">Company Name</ion-label>
+        <ion-input type="text" formControlName="CompanyName" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Tara Plantation" (change)="checkIfPresent(APILogin)"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary">Username</ion-label>
+        <ion-input type="text" formControlName="Username" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="S.Ohara:Tara Plantation"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary">Shared Secret</ion-label>
+        <ion-input type="text" formControlName="SharedSecret" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="ee9bf42adfd8f4db4c3570784e55845d"></ion-input>
+      </ion-item>
+    </form>
+
+  </ion-list>
+
+  <div class="padding">
+	    <button ion-button secondary (click)="loginAPI(APIlogin)">
+	      <div>Get my list of report suites</div>
+        <!--<div>Update my list of report suites</div>-->
+	    </button>
+  </div>
+
+</ion-content>

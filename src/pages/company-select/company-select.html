@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+      <ion-buttons start>
+        <button ion-button left>
+          <ion-icon name="help-circle"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title>
+          PocketSDR
+      </ion-title>
+      <button ion-button menuToggle right>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+  </ion-toolbar>
+  <ion-navbar>
+      <div text-center style="font-size: 1.8rem">Choose a company</div> 
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+<ion-list *ngIf="companies">
+  <ion-item-sliding *ngFor="let company of companies" #slidingItem>
+    <ion-item (click)="goToRsSelect(company)">
+        {{company}}
+    </ion-item>
+    <ion-item-options>
+      <button ion-button (click)="refreshCompany(company,slidingItem)">
+          <ion-icon name="refresh"></ion-icon>
+        </button>
+        <button ion-button color="danger" (click)="deleteItem(company,slidingItem)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+    </ion-item-options>
+  </ion-item-sliding>
+</ion-list>
+<div class="padding" *ngIf="companiesNotShown"><p>You haven't set up any companies yet.</p>
+  <button ion-button secondary [navPush]="companyLoginPage">
+       Log in to a company
+     </button>
+ </div>
+</ion-content>

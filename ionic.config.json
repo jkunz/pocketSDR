@@ -2,5 +2,7 @@
   "name": "pocketSDRv5",
   "app_id": "da0c7127",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }

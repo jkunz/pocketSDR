@@ -1,1 +1,24 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content" side="right">
+    <ion-header>
+      <ion-toolbar class="bar-balanced">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+  
+      <ion-content>
+          <ion-list>
+            <div *ngFor="let p of pages">
+                <button menuClose ion-item (click)="openPage(p)" *ngIf="pageKeeper.shownPages[p.title]===true">
+                    {{p.title}}
+                </button>
+            </div>
+            <!--<ion-item>
+              <ion-label >Includes Tutorial/Tips</ion-label>
+              <ion-toggle (ionChange)="menuCtrl.close()"></ion-toggle>
+            </ion-item>-->
+          </ion-list>
+      </ion-content>
+</ion-menu>
+  
+  <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+  <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

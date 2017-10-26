@@ -1,0 +1,5 @@
+<ion-tabs [selectedIndex]="myIndex">
+    <ion-tab [root]="companySelectionRoot" tabTitle="Companies" tabIcon="arrow-dropup-circle"></ion-tab>
+    <ion-tab [root]="reportSuiteSelectionRoot" tabTitle="Report Suites" tabIcon="list-box" [enabled]="pageKeeper.shownPages['Report Suite Selection']"></ion-tab>
+    <ion-tab [root]="variableSelectionRoot" tabTitle="Variables" tabIcon="paper" [enabled]="pageKeeper.shownPages['Variables']"></ion-tab>
+</ion-tabs>
