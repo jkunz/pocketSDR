@@ -51,28 +51,23 @@ export class MyApp {
 
   ngAfterViewInit() {
     this.platform.ready().then(() => {
-      /*
-      IonicDeeplink.route({
-        '/about-us': AboutPage,
-        '/universal-links-test': AboutPage,
-        '/products/:productId': ProductPage
-      }, function(match) {
-        // Handle the route manually
-      }, function(nomatch) {
-        // No match
-      })
-      */
 
-      // Convenience to route with a given nav
-      this.deeplinks.routeWithNavController(this.nav, {
-        '/pocketSDR/APIshortcut/:APIkey' : CompanyLoginPage
+    let routes={'/pocketSDR/APIshortcut' : CompanyLoginPage}
+
+    this.deeplinks.route(routes).subscribe((match)=>{
+      console.log("v5: matched",JSON.stringify(match));
+      this.nav.setRoot(CompanyLoginPage,match.$args);
+    },(nomatch) => {
+      console.log("v5: didn't match",JSON.stringify(nomatch))
+    });
+
+      /*this.deeplinks.routeWithNavController(this.nav, {
+        '/pocketSDR/APIshortcut:APIkey' : CompanyLoginPage
       }).subscribe((match) => {
-        console.log('Successfully routed', JSON.stringify(match));
+        console.log('v5: Successfully routed', JSON.stringify(match));
       }, (nomatch) => {
         console.warn('Unmatched Route', nomatch);
-      });
+      });*/
     })
   }
-  
 }
-

@@ -7,7 +7,7 @@ import { ApiServiceProvider  } from '../../providers/api-service/api-service';
 
 import { CompanyLoginPage } from '../company-login/company-login';
 
-
+declare var _satellite: any;
 
 @IonicPage()
 @Component({
@@ -21,6 +21,80 @@ export class CompanySelectPage {
   companyLoginPage = CompanyLoginPage
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public storage:Storage, public events:Events, public nav:Nav,public alertCtrl: AlertController,public loadingCtrl : LoadingController,public apiService: ApiServiceProvider) {
+    
+    this.shownTutorials=this.storage.get("shownTutorials").then(result => {
+      this.shownTutorials = result ? <Array<Object>> result : [];
+      if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect1")){
+        _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
+        this.storageService.addToStorageArray("shownTutorials","companySelect1")
+        this.showTutorial(1);
+      }else if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect2")){
+        this.storageService.addToStorageArray("shownTutorials","companySelect2")
+        _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
+        this.showTutorial(2);
+      }
+    });
+  }
+
+  showTutorial(number){
+    console.log("showTutorial opened")
+    if(number==1){
+      this.showTut1()
+    }else if(number==2){
+      this.showTut2()
+    }
+  } 
+  showTut1(){
+    let tutorial
+    tutorial = this.alertCtrl.create({
+      title: "Tip",
+      message: "Since pulling the RS list takes time, we only do it automatically once. If you want to refresh the RS list for a company, swipe left and tap the refresh button.",
+      buttons: [
+        {
+          text: "Next",
+          role: 'cancel',
+          handler: () => {
+            this.showTutorial(2)
+          }
+        },
+        {
+          text: "Close",
+          role: 'cancel',
+        }
+      ]
+    }); 
+    tutorial.present();
+    if(!_satellite.data.customVars["tutorial mode"]){
+      _satellite.data.customVars["tutorial mode"]="Manually Opened"
+    }
+    _satellite.data.customVars["tutorial"]="Company Select: Refresh a Company"
+    _satellite.track("tutorial");     
+  }
+  showTut2(){
+    let tutorial
+    tutorial = this.alertCtrl.create({
+      title: "Tip",
+      message: "This lists all companies you've added to this app on this device. You can delete a company by swiping left and tapping the delete button (you can always add it back later if needed).",
+      buttons: [
+          {
+            text: "Next",
+            role: 'cancel',
+            handler: () => {
+              this.showTutorial(1)
+            }
+          },
+          {
+            text: "Close",
+            role: 'cancel',
+          }
+        ]
+      }); 
+    tutorial.present();
+    if(!_satellite.data.customVars["tutorial mode"]){
+      _satellite.data.customVars["tutorial mode"]="Manually Opened"
+    }
+    _satellite.data.customVars["tutorial"]="Company Select: Delete a Company"
+    _satellite.track("tutorial");      
   }
 
   goToRsSelect(company){
@@ -56,6 +130,9 @@ export class CompanySelectPage {
     this.storage.get("companyData").then(result => {
       //get the companies current data to get its company, username and password; we only want to refresh/overwrite the report suites
       this.storageService.companyData=result
+      _satellite.data.customVars["company"]=company
+      _satellite.data.customVars["api type"]="company select:refresh"
+      _satellite.track("api attempt")
       this.runApi(company,loading,alert)
     });
   }
@@ -69,7 +146,6 @@ export class CompanySelectPage {
     this.events.publish('showPage:varList', false);
     this.events.publish('showPage:varData', false);
 
-    console.log("this.storageService.companyData",this.storageService.companyData)
     //set the username and secret for the API
     this.apiService.currentUsername=this.storageService.companyData[company].companyUsername
     this.apiService.currentSharedSecret=this.storageService.companyData[company].companySecret
@@ -87,10 +163,12 @@ export class CompanySelectPage {
                 this.storageService.addToStorageComplex("companyData",company,companyData)
 
                 loading.dismiss();
-                
+                _satellite.track("api success")
                 this.goToRsSelect(company)
 
             }, error => {
+              _satellite.data.customVars["api error"]=error
+              _satellite.track("api error")
                 loading.dismiss();
                 console.log(error);
                 alert.present();
@@ -126,10 +204,11 @@ export class CompanySelectPage {
                     delete localCompanyData[company]
                     console.log("localCompanyData after: ", localCompanyData)
                     this.storageService.addToStorageSimple("companyData",localCompanyData)
+                    _satellite.data.customVars["company"]=company
+                    _satellite.track("delete")
 
                     //and from currentCompany if it IS the current company
                     if(this.storageService.currentCompany==company){
-                      console.log("current company being deleted")
                       this.storageService.currentCompany=""
                       this.storageService.addToStorageSimple("currentCompany","")
                       this.storageService.currentRS=""
@@ -147,14 +226,17 @@ export class CompanySelectPage {
       alert.present();
   } 
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad CompanySelectPage');
+  ionViewDidEnter() {
+
   }
 
   ionViewWillEnter() { 
     this.storage.get("currentCompany").then(result => this.storageService.currentCompany = result ? <Object> result : {});
     return this.storage.get("companies").then(result => {
       this.companies = result ? <Array<Object>> result : [];
+      _satellite.data.customVars["number of companies"]=this.companies.length.toString();
+      _satellite.data.customVars["page name"]="Company Select";
+      _satellite.track("page view");;
       if(this.companies.length!=0){
         this.companiesNotShown=false;
       }else{

@@ -12,16 +12,17 @@ export class PageKeeperServiceProvider {
     this.shownPages['About this app']=true
 
     this.events.subscribe('showPage:RSList', data => {
+      console.log("RS selection event fired")
       this.shownPages['Report Suite Selection']=data
     });
-    this.events.subscribe('showPage:varList', data => {
+    this.events.subscribe('showPage:VarList', data => {
+      console.log("Var List event fired")
       this.shownPages['Variables']=data
     });
-    this.events.subscribe('showPage:varData', data => {
+    this.events.subscribe('showPage:VarData', data => {
+      console.log("Var Data event fired")
       this.shownPages['Variable Details']=data
     });
-    
-    console.log('Hello PageKeeperServiceProvider Provider');
   }
 
 }

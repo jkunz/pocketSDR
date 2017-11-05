@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events} from 'ionic-angular';
 
-/**
- * Generated class for the VarDetailsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { StorageServiceProvider  } from '../../providers/storage-service/storage-service';
+
+declare var _satellite: any;
 
 @IonicPage()
 @Component({
@@ -14,12 +11,46 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'var-details.html',
 })
 export class VarDetailsPage {
+  varDetail:any;
+  varAttributes:any[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public events:Events) {
+    if(navParams.get('thisVariable')){
+      this.varDetail = navParams.get('thisVariable')
+    }else{
+      this.varDetail=this.storageService.currentVar
+    }
+
+    this.varAttributes=[]
+
+    this.events.publish('showPage:varData', true);
+
+    for (var item in this.varDetail) {
+      if(typeof this.varDetail[item]=="string" && this.varDetail[item]!=""){
+        if(item=="id"){
+          this.varAttributes.push({'name':'Variable','value':this.varDetail[item]})        
+        }else{
+          this.varAttributes.push({'name':this.cleanString(item),'value':this.cleanString(this.varDetail[item])})
+        }
+      }
+    }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad VarDetailsPage');
+  cleanString(string){
+    string=string.replace(/_/g," ") 
+
+    if(string.indexOf("eVar")==-1){
+      string=string.charAt(0).toUpperCase() + string.slice(1);
+    }   
+    string=string.replace("Allocation type","Allocation") 
+    string=string.replace("Expiration type","Expiration") 
+
+    return string
+  }
+
+  ionViewDidEnter() {
+    _satellite.data.customVars["page name"]="Variable Details"
+    _satellite.track("page view");
   }
 
 }

@@ -9,13 +9,13 @@ import { HttpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { Deeplinks } from '@ionic-native/deeplinks';
 
-import { TabsPage } from '../pages/tabs/tabs';
-import { AboutPage } from '../pages/about/about';
-import { CompanySelectPage } from '../pages/company-select/company-select';
-import { CompanyLoginPage } from '../pages/company-login/company-login';
-import { RsSelectPage } from '../pages/rs-select/rs-select';
-import { VarDetailsPage } from '../pages/var-details/var-details';
-import { VarSelectPage } from '../pages/var-select/var-select';
+import { TabsPageModule } from '../pages/tabs/tabs.module';
+import { AboutPageModule } from '../pages/about/about.module';
+import { CompanySelectPageModule } from '../pages/company-select/company-select.module';
+import { CompanyLoginPageModule } from '../pages/company-login/company-login.module';
+import { RsSelectPageModule } from '../pages/rs-select/rs-select.module';
+import { VarDetailsPageModule } from '../pages/var-details/var-details.module';
+import { VarSelectPageModule } from '../pages/var-select/var-select.module';
 
 import { StorageServiceProvider } from '../providers/storage-service/storage-service';
 import { ApiServiceProvider } from '../providers/api-service/api-service';
@@ -24,30 +24,23 @@ import { PageKeeperServiceProvider } from '../providers/page-keeper-service/page
 @NgModule({
   declarations: [
     MyApp,
-    CompanySelectPage,
-    CompanyLoginPage,
-    RsSelectPage,
-    VarSelectPage,
-    VarDetailsPage,
-    TabsPage,
-    AboutPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    AboutPageModule,
+    CompanySelectPageModule,
+    CompanyLoginPageModule,
+    RsSelectPageModule,
+    VarSelectPageModule,
+    VarDetailsPageModule,
+    TabsPageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    CompanySelectPage,
-    CompanyLoginPage, 
-    RsSelectPage,
-    VarSelectPage,
-    VarDetailsPage,
-    TabsPage,
-    AboutPage
+    MyApp
   ],
   providers: [
     Deeplinks,

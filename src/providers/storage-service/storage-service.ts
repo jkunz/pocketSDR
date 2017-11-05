@@ -19,21 +19,20 @@ export class StorageServiceProvider {
 	constructor(public events:Events, public storage:Storage){
 		this.tutorial=true
 		//when the app starts up, pull from storage
-		storage.get('currentCompany').then((result) => {
-			this.currentCompany=result?result:'';
-            if(result!=''){this.events.publish('showPage:RSList', true)}
+        storage.get('currentCompany').then((result) => {
+            this.currentCompany=result?result:'';
+            if(result && result!=''){this.events.publish('showPage:RSList', true)}
 		});
 		storage.get('currentRS').then((result) => {
-			this.currentRS=result?result:'';
-            if(result!=''){this.events.publish('showPage:VarList', true)}
+            this.currentRS=result?result:'';
+            if(result && result!=''){this.events.publish('showPage:VarList', true)}
 		});
 		storage.get('currentVar').then((result) => {
-			this.currentCompany=result?result:'';
-            if(result!=''){this.events.publish('showPage:VarData', true)}
+			this.currentVar=result?result:'';
+            if(result && result!=''){this.events.publish('showPage:VarData', true)}
 		});
 		storage.get("companies").then(result => this.companies = result ? <Array<Object>> result : []);
 		storage.get("shownTutorials").then(result => this.shownTutorials = result ? <Array<Object>> result : []);
-		storage.get("companyData").then(result => this.companyData = result ? <Object> result : {});
 		storage.get("companyData").then(result => this.companyData = result ? <Object> result : {});
 	}
 

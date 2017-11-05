@@ -17,7 +17,7 @@ export class ApiServiceProvider {
     currentSharedSecret:string;  
 
   constructor(public http: Http,) {
-    console.log('Hello ApiServiceProvider Provider');
+
   }
 
   hitAPI(method, params){

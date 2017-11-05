@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-navbar color="primary">
       <ion-buttons start>
-        <button ion-button left>
+        <button ion-button left (click)="showTutorial(1)">
           <ion-icon name="help-circle"></ion-icon>
         </button>
       </ion-buttons>
@@ -11,10 +11,10 @@
       <button ion-button menuToggle right>
         <ion-icon name="menu"></ion-icon>
       </button>
-  </ion-toolbar>
-  <ion-navbar>
-      <div text-center style="font-size: 1.8rem">Choose a company</div> 
   </ion-navbar>
+  <ion-toolbar>
+      <div text-center style="font-size: 1.8rem">Choose a company</div> 
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
