@@ -12,10 +12,11 @@
                     {{p.title}}
                 </button>
             </div>
-            <!--<ion-item>
+            <ion-item>
               <ion-label >Includes Tutorial/Tips</ion-label>
-              <ion-toggle (ionChange)="menuCtrl.close()"></ion-toggle>
-            </ion-item>-->
+              <ion-toggle [(ngModel)]="tutorialSelection" (ionChange)="tutorialToggle()"></ion-toggle>
+              <!--<ion-toggle [(ngModel)]="this.storageService.tutorial" (ionChange)="menuCtrl.close()"></ion-toggle>-->
+            </ion-item>
           </ion-list>
       </ion-content>
 </ion-menu>

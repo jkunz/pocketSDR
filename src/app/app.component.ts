@@ -13,6 +13,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { AboutPage } from '../pages/about/about';
 
 import { PageKeeperServiceProvider } from '../providers/page-keeper-service/page-keeper-service';
+import { StorageServiceProvider } from '../providers/storage-service/storage-service';
 
 @Component({
   templateUrl: 'app.html',
@@ -22,13 +23,16 @@ export class MyApp {
   rootPage:any = TabsPage;  
   @ViewChild(Nav) nav: Nav;  
   pages: Array<{title: string, component: any, index?: number}>;
+  tutorialSelection:any;
 
-  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public menuCtrl:MenuController, public events:Events, public pageKeeper:PageKeeperServiceProvider, public deeplinks:Deeplinks) {
+  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public menuCtrl:MenuController, public events:Events, public pageKeeper:PageKeeperServiceProvider, public deeplinks:Deeplinks, public storageService:StorageServiceProvider) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+
+      this.tutorialSelection=this.storageService.tutorial
 
       this.pages = [
         { title: 'Add/Update Company', component: CompanyLoginPage },
@@ -49,12 +53,18 @@ export class MyApp {
     }
   }
 
+  tutorialToggle(){
+    this.storageService.addToStorageSimple("tutorial",this.tutorialSelection)
+    this.menuCtrl.close()
+  }
+
   ngAfterViewInit() {
     this.platform.ready().then(() => {
 
     let routes={'/pocketSDR/APIshortcut' : CompanyLoginPage}
 
     this.deeplinks.route(routes).subscribe((match)=>{
+
       console.log("v5: matched",JSON.stringify(match));
       this.nav.setRoot(CompanyLoginPage,match.$args);
     },(nomatch) => {

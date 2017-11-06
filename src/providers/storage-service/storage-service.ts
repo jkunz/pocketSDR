@@ -14,11 +14,16 @@ export class StorageServiceProvider {
     companyData:any;
 
     tutorial:any;
-	shownTutorials:any;
+    shownTutorials:any;
+    
+    deeplink:any;
 
 	constructor(public events:Events, public storage:Storage){
-		this.tutorial=true
-		//when the app starts up, pull from storage
+        this.deeplink=true
+        //when the app starts up, pull from storage
+        storage.get('tutorial').then((result) => {
+			this.tutorial=result?result:false;
+		});
         storage.get('currentCompany').then((result) => {
             this.currentCompany=result?result:'';
             if(result && result!=''){this.events.publish('showPage:RSList', true)}
@@ -30,7 +35,7 @@ export class StorageServiceProvider {
 		storage.get('currentVar').then((result) => {
 			this.currentVar=result?result:'';
             if(result && result!=''){this.events.publish('showPage:VarData', true)}
-		});
+        });
 		storage.get("companies").then(result => this.companies = result ? <Array<Object>> result : []);
 		storage.get("shownTutorials").then(result => this.shownTutorials = result ? <Array<Object>> result : []);
 		storage.get("companyData").then(result => this.companyData = result ? <Object> result : {});

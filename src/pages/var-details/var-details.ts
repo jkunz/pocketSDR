@@ -44,6 +44,7 @@ export class VarDetailsPage {
     }   
     string=string.replace("Allocation type","Allocation") 
     string=string.replace("Expiration type","Expiration") 
+    string=string.replace("Most recent last","Most Recent") 
 
     return string
   }

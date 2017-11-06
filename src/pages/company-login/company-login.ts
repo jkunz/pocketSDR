@@ -30,10 +30,8 @@ export class CompanyLoginPage {
     this.loginUsername=""//"jkunz:Jennifer Kunz"
     this.loginCompany=""//"Jenn Kunz Test"
 
-    let ImportEntry="false"
-
     if(paramsKey != "undefined"){
-      ImportEntry="true"
+      this.storageService.deeplink=true
       this.storageService.addToStorageArray("shownTutorials","companyLogin")
       this.loginSecret=paramsKey.split("|")[1]
       this.loginUsername=paramsKey.split("|")[0]
@@ -42,7 +40,7 @@ export class CompanyLoginPage {
     }
 
     this.shownTutorials=this.storageService.shownTutorials || []
-    if(ImportEntry=="false" && (this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin"))){
+    if(this.storageService.deeplink=="false" && (this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin"))){
       this.storageService.addToStorageArray("shownTutorials","companyLogin")
       _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
       this.showTutorial()
