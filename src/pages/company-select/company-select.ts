@@ -216,8 +216,8 @@ export class CompanySelectPage {
                       this.events.publish('showPage:RSList', false);
                       this.storageService.currentVar=""
                       this.storageService.addToStorageSimple("currentVar","")
-                      this.events.publish('showPage:varList', false);
-                      this.events.publish('showPage:varData', false);
+                      this.events.publish('showPage:VarList', false);
+                      this.events.publish('showPage:VarData', false);
                     }
                   }
               }

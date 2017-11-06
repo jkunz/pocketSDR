@@ -42,7 +42,7 @@ export class CompanyLoginPage {
     }
 
     this.shownTutorials=this.storageService.shownTutorials || []
-    if(ImportEntry=="false" || (this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin"))){
+    if(ImportEntry=="false" && (this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin"))){
       this.storageService.addToStorageArray("shownTutorials","companyLogin")
       _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
       this.showTutorial()
@@ -123,6 +123,7 @@ export class CompanyLoginPage {
   }
 
   checkIfPresent(inputName){
+    console.log("inputName",inputName)
     console.log("detected change",inputName.controls.CompanyName.value)
     if(this.storageService.companies && this.storageService.companies.includes(inputName.controls.CompanyName.value)){
       this.currentSuite=true

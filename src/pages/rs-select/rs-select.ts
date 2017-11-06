@@ -33,11 +33,12 @@ export class RsSelectPage {
   }
 
   goToRsDetails(rsid){
-    this.events.publish('showPage:varList', true);
+    console.log("goToRsDetails running")
+    this.events.publish('showPage:VarList', true);
     this.storageService.currentRS=rsid
     this.storageService.addToStorageSimple("currentRS",rsid)
     this.navCtrl.parent.select(2); //parent is the tabs page; it's the 3rd in the array ("2" in javascript terms)
-    this.nav.setRoot(TabsPage, { index: 2 });//parent is the tabs page; it's the 3rd in the array ("2" in javascript terms)
+    //this.nav.setRoot(TabsPage, { index: 2 });//parent is the tabs page; it's the 3rd in the array ("2" in javascript terms)
   }
 
   search(nameKey, myArray){
