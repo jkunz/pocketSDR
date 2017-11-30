@@ -19,10 +19,15 @@ export class VarSelectPage {
   companyData:any;
   currentCompany:any;
   searchTerm: string = '';
+  DTMenabled:any;
 
   //TODO- "don't see a variable? We only show enabled variables- check that it is enabled and that you are in the right report suite"
   constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public storage:Storage, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public events:Events) {
-    
+    if(typeof _satellite=="undefined"){
+      this.DTMenabled=false
+    }else{
+      this.DTMenabled=true
+    }
   }
 
   initializeVariables() {
@@ -30,11 +35,13 @@ export class VarSelectPage {
   }
 
   analyticsTrackSearch(val){
-    _satellite.data.customVars["search type"]="variable selection:search"
-    if(val && val!=""){_satellite.data.customVars["search term"]=val}else{
-      _satellite.data.customVars["search term"]="none entered"
+    if(this.DTMenabled===true){
+       _satellite.data.customVars["search type"]="variable selection:search"
+      if(val && val!=""){_satellite.data.customVars["search term"]=val}else{
+        _satellite.data.customVars["search term"]="none entered"
+      }
+      _satellite.track("search");
     }
-    _satellite.track("search"); 
   }
 
   getItems(ev: any) {
@@ -62,35 +69,63 @@ export class VarSelectPage {
   }  
 
   fireAnalytics() {
-    _satellite.data.customVars["company"]=this.currentCompany  
-    _satellite.data.customVars["page name"]="Variable Selection"
-    _satellite.track("page view");
+    if(this.DTMenabled===true){
+      _satellite.data.customVars["company"]=this.currentCompany  
+      _satellite.data.customVars["page name"]="Variable Selection"
+      _satellite.track("page view");
+    }  
   }
 
   ionViewWillEnter(StorageServiceProvider) { 
-  return this.storage.get("companyData").then(result => {
-      if(result){
-        this.companyData=result
-        this.currentCompany=this.storageService.currentCompany
-        let currentRS=this.storageService.currentRS
-
-        let myIndex=0
-        for (var i = 0; i < this.companyData[this.currentCompany].reportSuites.length; i++) {
-          if(this.companyData[this.currentCompany].reportSuites[i].rsid==currentRS){
-            myIndex=i
-          }
+    if(this.storageService.companyData){
+      this.companyData=this.storageService.companyData;
+      this.currentCompany=this.storageService.currentCompany;
+      let currentRS=this.storageService.currentRS
+      let myIndex=0
+      for (var i = 0; i < this.companyData[this.currentCompany].reportSuites.length; i++) {
+        if(this.companyData[this.currentCompany].reportSuites[i].rsid==currentRS){
+          myIndex=i;
+          break;
         }
-
-        this.variables=this.companyData[this.currentCompany].reportSuites[myIndex].variables ? <Array<Object>> this.companyData[this.currentCompany].reportSuites[myIndex].variables : []
-        this.initializeVariables();
-        this.fireAnalytics()
-      }else{
-        this.variables=[{name:"noVariables"}]
-        this.fireAnalytics()
       }
-    }, error => {
-        this.variables=[{name:"noVariables"}]
-        this.fireAnalytics()
-    });
+
+      this.variables=this.companyData[this.currentCompany].reportSuites[myIndex].variables ? <Array<Object>> this.companyData[this.currentCompany].reportSuites[myIndex].variables : []
+      console.log("my variables:",JSON.stringify(this.variables));
+      this.initializeVariables();
+      this.fireAnalytics()
+
+    }else{
+      return this.storage.get("companyData").then(result => {
+        if(result){
+          this.companyData=result
+          this.currentCompany=this.storageService.currentCompany
+          let currentRS=this.storageService.currentRS
+  
+          let myIndex=0
+          for (var i = 0; i < this.companyData[this.currentCompany].reportSuites.length; i++) {
+            console.log("checking RS:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i].rsid))
+            if(this.companyData[this.currentCompany].reportSuites[i].rsid==currentRS){
+              myIndex=i;
+              console.log("this RS matches:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i]))
+              break;
+            }
+          }
+  
+          this.variables=this.companyData[this.currentCompany].reportSuites[myIndex].variables ? <Array<Object>> this.companyData[this.currentCompany].reportSuites[myIndex].variables : []
+          console.log("my variables:",JSON.stringify(this.variables));
+          this.initializeVariables();
+          this.fireAnalytics()
+        }else{
+          this.variables=[{name:"noVariables"}]
+          this.fireAnalytics()
+        }
+      }, error => {
+          this.variables=[{name:"noVariables"}]
+          this.fireAnalytics()
+      });
+    }
   }
 }
+
+
+//TODO- empty search when revisiting page (or force it to search)

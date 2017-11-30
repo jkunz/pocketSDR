@@ -22,14 +22,19 @@ import { ApiServiceProvider } from '../providers/api-service/api-service';
 import { PageKeeperServiceProvider } from '../providers/page-keeper-service/page-keeper-service';
 
 @NgModule({
-  declarations: [
-    MyApp,
-  ],
+  declarations: [MyApp],
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
+    IonicModule.forRoot(MyApp,{
+      scrollPadding: false,
+      scrollAssist: true,
+      autoFocusAssist: false
+    }),
+    IonicStorageModule.forRoot({
+      name:'_ionicStorage',
+      storeName: '_pocketSDR',
+    }),
     AboutPageModule,
     CompanySelectPageModule,
     CompanyLoginPageModule,

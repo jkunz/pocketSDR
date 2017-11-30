@@ -13,8 +13,15 @@ declare var _satellite: any;
 export class VarDetailsPage {
   varDetail:any;
   varAttributes:any[];
+  DTMenabled:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public events:Events) {
+    if(typeof _satellite=="undefined"){
+      this.DTMenabled=false
+    }else{
+      this.DTMenabled=true
+    }
+
     if(navParams.get('thisVariable')){
       this.varDetail = navParams.get('thisVariable')
     }else{
@@ -50,8 +57,12 @@ export class VarDetailsPage {
   }
 
   ionViewDidEnter() {
-    _satellite.data.customVars["page name"]="Variable Details"
-    _satellite.track("page view");
+    if(typeof _satellite!="undefined"){
+      _satellite.data.customVars["page name"]="Variable Details"
+      _satellite.track("page view");
+    }  
   }
 
 }
+
+//TODO- does merchandising show up?

@@ -13,8 +13,8 @@
                 </button>
             </div>
             <ion-item>
-              <ion-label >Includes Tutorial/Tips</ion-label>
-              <ion-toggle [(ngModel)]="tutorialSelection" (ionChange)="tutorialToggle()"></ion-toggle>
+              <ion-label >Enable Tutorials/Tips</ion-label>
+              <ion-toggle [(ngModel)]="storageService.tutorial" (ionChange)="tutorialToggle()"></ion-toggle>
               <!--<ion-toggle [(ngModel)]="this.storageService.tutorial" (ionChange)="menuCtrl.close()"></ion-toggle>-->
             </ion-item>
           </ion-list>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController, Events, Nav } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, Events, Nav, ModalController } from 'ionic-angular';
 
 import { StorageServiceProvider  } from '../../providers/storage-service/storage-service';
 import { ApiServiceProvider  } from '../../providers/api-service/api-service';
@@ -19,36 +19,50 @@ export class CompanySelectPage {
   companiesNotShown : any;
   shownTutorials:any;
   companyLoginPage = CompanyLoginPage
+  DTMenabled:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public storage:Storage, public events:Events, public nav:Nav,public alertCtrl: AlertController,public loadingCtrl : LoadingController,public apiService: ApiServiceProvider) {
-    
+  constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public storage:Storage, public events:Events, public nav:Nav,public alertCtrl: AlertController,public loadingCtrl : LoadingController,public apiService: ApiServiceProvider,public modalCtrl: ModalController) {
+    if(typeof _satellite=="undefined"){
+      this.DTMenabled=false
+    }else{
+      this.DTMenabled=true
+    }
     this.shownTutorials=this.storage.get("shownTutorials").then(result => {
       this.shownTutorials = result ? <Array<Object>> result : [];
-      if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect1")){
-        _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
-        this.storageService.addToStorageArray("shownTutorials","companySelect1")
+      console.log("this.companiesNotShown",this.companiesNotShown)
+      if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect1") && this.companiesNotShown==false){
+        if(this.DTMenabled===true){_satellite.data.customVars["tutorial mode"]="Tutorial Mode"}
+        if(this.DTMenabled===true){this.storageService.addToStorageArray("shownTutorials","companySelect1")}
         this.showTutorial(1);
-      }else if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect2")){
+      }else if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelect2") && this.companiesNotShown==false){
         this.storageService.addToStorageArray("shownTutorials","companySelect2")
-        _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
+        if(this.DTMenabled===true){_satellite.data.customVars["tutorial mode"]="Tutorial Mode"}
         this.showTutorial(2);
+      }else if(this.storageService.tutorial==true && !this.shownTutorials.includes("companySelectNoCompanies") && this.companiesNotShown==true){
+        this.storageService.addToStorageArray("shownTutorials","companySelectNoCompanies")
+        if(this.DTMenabled===true){ _satellite.data.customVars["tutorial mode"]="Tutorial Mode"}
+        this.showTutorial(3);
       }
     });
   }
 
   showTutorial(number){
     console.log("showTutorial opened")
-    if(number==1){
-      this.showTut1()
-    }else if(number==2){
-      this.showTut2()
+    if(this.companiesNotShown==false){
+      if(number==1){
+        this.showTut1()
+      }else if(number==2){
+        this.showTut2()
+      }
+    }else{
+      this.showTut3()
     }
   } 
   showTut1(){
     let tutorial
     tutorial = this.alertCtrl.create({
       title: "Tip",
-      message: "Since pulling the RS list takes time, we only do it automatically once. If you want to refresh the RS list for a company, swipe left and tap the refresh button.",
+      message: "Since pulling the Company's RS list takes time, we only do it automatically once. If you want to refresh the RS list for a company, swipe left and tap the refresh button.",
       buttons: [
         {
           text: "Next",
@@ -64,11 +78,13 @@ export class CompanySelectPage {
       ]
     }); 
     tutorial.present();
-    if(!_satellite.data.customVars["tutorial mode"]){
-      _satellite.data.customVars["tutorial mode"]="Manually Opened"
+    if(this.DTMenabled===true){
+      if(!_satellite.data.customVars["tutorial mode"]){
+        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      }
+      _satellite.data.customVars["tutorial"]="Company Select: Refresh a Company"
+      _satellite.track("tutorial");     
     }
-    _satellite.data.customVars["tutorial"]="Company Select: Refresh a Company"
-    _satellite.track("tutorial");     
   }
   showTut2(){
     let tutorial
@@ -90,11 +106,52 @@ export class CompanySelectPage {
         ]
       }); 
     tutorial.present();
-    if(!_satellite.data.customVars["tutorial mode"]){
-      _satellite.data.customVars["tutorial mode"]="Manually Opened"
-    }
-    _satellite.data.customVars["tutorial"]="Company Select: Delete a Company"
-    _satellite.track("tutorial");      
+    if(this.DTMenabled===true){
+      if(!_satellite.data.customVars["tutorial mode"]){
+        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      }
+      _satellite.data.customVars["tutorial"]="Company Select: Delete a Company"
+      _satellite.track("tutorial");    
+    }    
+  }
+  showTut3(){
+    let tutorial
+    tutorial = this.alertCtrl.create({
+      title: "Tip",
+      message: "You haven't set up any companies yet. You can manually enter your API keys by tapping 'Go to Login Page' below, or you can import your key from your desktop by going on your desktop to www.digitaldatatactics.com/pocketSDR/.",
+      buttons: [
+          {
+            text: "Go to Login Page",
+            role: 'cancel',
+            handler: () => {
+              this.goToCompanyLogin()
+            }
+          },
+          {
+            text: "Close",
+            role: 'cancel',
+          }
+        ]
+      }); 
+    tutorial.present();
+    if(this.DTMenabled===true){
+      if(!_satellite.data.customVars["tutorial mode"]){
+        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      }
+      _satellite.data.customVars["tutorial"]="Company Select: No Companies"
+      _satellite.track("tutorial");    
+    }    
+  }
+
+  showPicTutorial(){
+    var modalPage = this.modalCtrl.create('ModalPage'); modalPage.present();
+    if(this.DTMenabled===true){
+      if(!_satellite.data.customVars["tutorial mode"]){
+        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      }
+      _satellite.data.customVars["tutorial"]="Company Select: API Key"
+      _satellite.track("tutorial");    
+    }    
   }
 
   goToRsSelect(company){
@@ -130,9 +187,11 @@ export class CompanySelectPage {
     this.storage.get("companyData").then(result => {
       //get the companies current data to get its company, username and password; we only want to refresh/overwrite the report suites
       this.storageService.companyData=result
-      _satellite.data.customVars["company"]=company
-      _satellite.data.customVars["api type"]="company select:refresh"
-      _satellite.track("api attempt")
+      if(this.DTMenabled===true){
+        _satellite.data.customVars["company"]=company
+        _satellite.data.customVars["api type"]="company select:refresh"
+        _satellite.track("api attempt")
+      }
       this.runApi(company,loading,alert)
     });
   }
@@ -163,15 +222,17 @@ export class CompanySelectPage {
                 this.storageService.addToStorageComplex("companyData",company,companyData)
 
                 loading.dismiss();
-                _satellite.track("api success")
+                if(this.DTMenabled===true){_satellite.track("api success")}
                 this.goToRsSelect(company)
 
             }, error => {
-              _satellite.data.customVars["api error"]=error
-              _satellite.track("api error")
-                loading.dismiss();
-                console.log(error);
-                alert.present();
+              if(this.DTMenabled===true){
+                _satellite.data.customVars["api error"]=error
+                _satellite.track("api error")
+              }
+              loading.dismiss();
+              console.log(error);
+              alert.present();
             }); 
     }
 
@@ -204,8 +265,10 @@ export class CompanySelectPage {
                     delete localCompanyData[company]
                     console.log("localCompanyData after: ", localCompanyData)
                     this.storageService.addToStorageSimple("companyData",localCompanyData)
-                    _satellite.data.customVars["company"]=company
-                    _satellite.track("delete")
+                    if(this.DTMenabled===true){
+                      _satellite.data.customVars["company"]=company
+                      _satellite.track("delete")
+                    }  
 
                     //and from currentCompany if it IS the current company
                     if(this.storageService.currentCompany==company){
@@ -234,9 +297,11 @@ export class CompanySelectPage {
     this.storage.get("currentCompany").then(result => this.storageService.currentCompany = result ? <Object> result : {});
     return this.storage.get("companies").then(result => {
       this.companies = result ? <Array<Object>> result : [];
-      _satellite.data.customVars["number of companies"]=this.companies.length.toString();
-      _satellite.data.customVars["page name"]="Company Select";
-      _satellite.track("page view");;
+      if(typeof _satellite!="undefined"){
+        _satellite.data.customVars["number of companies"]=this.companies.length.toString();
+        _satellite.data.customVars["page name"]="Company Select";
+        _satellite.track("page view");
+      }
       if(this.companies.length!=0){
         this.companiesNotShown=false;
       }else{

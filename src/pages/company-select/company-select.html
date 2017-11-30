@@ -5,9 +5,7 @@
           <ion-icon name="help-circle"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>
-          PocketSDR
-      </ion-title>
+      <ion-title><img src="assets/imgs/bannerlogo.png" style="display:inline-block" alt="logo"/></ion-title>
       <button ion-button menuToggle right>
         <ion-icon name="menu"></ion-icon>
       </button>
@@ -33,8 +31,10 @@
     </ion-item-options>
   </ion-item-sliding>
 </ion-list>
-<div class="padding" *ngIf="companiesNotShown"><p>You haven't set up any companies yet.</p>
-  <button ion-button secondary [navPush]="companyLoginPage">
+<div *ngIf="companiesNotShown">
+  <p>You haven't set up any companies yet. Set one up by connecting the app with the Adobe API using your <b>Web Services API key</b> <ion-icon name="help-circle" color="primary" (click)="showPicTutorial()"></ion-icon>.</p>
+  <p>You can manually enter your API keys by tapping "Log in to a company" below, or you can <b>import your key from your desktop by going on your desktop to www.digitaldatatactics.com/pocketSDR/.</b></p>
+  <button ion-button color="secondary" [navPush]="companyLoginPage">
        Log in to a company
      </button>
  </div>

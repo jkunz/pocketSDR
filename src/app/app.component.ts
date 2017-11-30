@@ -4,10 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Deeplinks } from '@ionic-native/deeplinks';
 
-import { CompanySelectPage } from '../pages/company-select/company-select';
 import { CompanyLoginPage } from '../pages/company-login/company-login';
-import { RsSelectPage } from '../pages/rs-select/rs-select';
-import { VarSelectPage } from '../pages/var-select/var-select';
 import { VarDetailsPage } from '../pages/var-details/var-details';
 import { TabsPage } from '../pages/tabs/tabs';
 import { AboutPage } from '../pages/about/about';
@@ -17,7 +14,7 @@ import { StorageServiceProvider } from '../providers/storage-service/storage-ser
 
 @Component({
   templateUrl: 'app.html',
-  providers: [PageKeeperServiceProvider]  
+  providers: [PageKeeperServiceProvider],  
 })
 export class MyApp {
   rootPage:any = TabsPage;  
@@ -30,9 +27,8 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
-      splashScreen.hide();
-
-      this.tutorialSelection=this.storageService.tutorial
+        // This requires installation of https://github.com/driftyco/ionic-plugin-keyboard
+        // and can only affect native compiled Ionic2 apps (not webserved).
 
       this.pages = [
         { title: 'Add/Update Company', component: CompanyLoginPage },
@@ -42,6 +38,7 @@ export class MyApp {
         { title: 'Variable Details', component: VarDetailsPage },
         { title: 'About this app', component: AboutPage }
       ];
+      splashScreen.hide();
     });
   }
 
@@ -54,7 +51,7 @@ export class MyApp {
   }
 
   tutorialToggle(){
-    this.storageService.addToStorageSimple("tutorial",this.tutorialSelection)
+    this.storageService.addToStorageSimple("tutorial",this.storageService.tutorial)
     this.menuCtrl.close()
   }
 
@@ -64,20 +61,10 @@ export class MyApp {
     let routes={'/pocketSDR/APIshortcut' : CompanyLoginPage}
 
     this.deeplinks.route(routes).subscribe((match)=>{
-
-      console.log("v5: matched",JSON.stringify(match));
       this.nav.setRoot(CompanyLoginPage,match.$args);
     },(nomatch) => {
       console.log("v5: didn't match",JSON.stringify(nomatch))
     });
-
-      /*this.deeplinks.routeWithNavController(this.nav, {
-        '/pocketSDR/APIshortcut:APIkey' : CompanyLoginPage
-      }).subscribe((match) => {
-        console.log('v5: Successfully routed', JSON.stringify(match));
-      }, (nomatch) => {
-        console.warn('Unmatched Route', nomatch);
-      });*/
     })
   }
 }

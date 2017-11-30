@@ -5,9 +5,7 @@
           <ion-icon name="help-circle"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>
-          PocketSDR
-      </ion-title>
+      <ion-title><img src="assets/imgs/bannerlogo.png" style="display:inline-block" alt="logo"/></ion-title>
       <button ion-button menuToggle right>
         <ion-icon name="menu"></ion-icon>
       </button>
@@ -24,7 +22,7 @@
       <ion-item  (click)="clickRS(rs.rsid)">
           <h2 class="story-title">{{rs.site_title}}</h2> 
           <p>{{rs.rsid}}</p> 
-          <p><span *ngIf="rs.lastUpdated"><i>Last updated: {{rs.lastUpdated}}</i></span><span *ngIf="!rs.lastUpdated"><i>Never updated in this app</i></span></p>
+          <p><span *ngIf="rs.lastUpdated"><i>Last updated: {{rs.lastUpdated}}</i></span><span *ngIf="!rs.lastUpdated"><i>Data not yet retrieved</i></span></p>
       </ion-item><ion-item-options>
       <button ion-button (click)="refreshItem(rs.rsid)">
         <ion-icon name="refresh"></ion-icon>
@@ -39,6 +37,8 @@
       [showCancelButton]="shouldShowCancel"
       (ionInput)="getItems($event)"
       (ionCancel)="onCancel($event)"
-      placeholder="Filter by...">
+      placeholder="Filter by..."
+      debounce="500"
+      >
   </ion-searchbar>
 </ion-footer>

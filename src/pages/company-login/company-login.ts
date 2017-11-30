@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController, Events, Nav } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, Events, Nav, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ApiServiceProvider  } from '../../providers/api-service/api-service';
@@ -22,8 +22,14 @@ export class CompanyLoginPage {
   loginSecret:string;
   currentSuite:boolean;
   shownTutorials:any;
+  DTMenabled:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public loadingCtrl : LoadingController, public alertCtrl: AlertController, public apiService: ApiServiceProvider, public storageService:StorageServiceProvider, public events:Events, public nav:Nav) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public loadingCtrl : LoadingController, public alertCtrl: AlertController, public apiService: ApiServiceProvider, public storageService:StorageServiceProvider, public events:Events, public nav:Nav, public modalCtrl:ModalController) {
+    if(typeof _satellite=="undefined"){
+      this.DTMenabled=false
+    }else{
+      this.DTMenabled=true
+    }
     let paramsKey=decodeURI(navParams.get('key'));
 
     this.loginSecret=""//"ee9be22adfd8f4db4c3570784e55845d"
@@ -36,13 +42,13 @@ export class CompanyLoginPage {
       this.loginSecret=paramsKey.split("|")[1]
       this.loginUsername=paramsKey.split("|")[0]
       this.loginCompany=this.loginUsername.substring(this.loginUsername.indexOf(":")+1)
-      _satellite.data.customVars["api shortcut"]="true"
+      if(this.DTMenabled===true){_satellite.data.customVars["api shortcut"]="true"}
     }
 
     this.shownTutorials=this.storageService.shownTutorials || []
     if(this.storageService.deeplink=="false" && (this.storageService.tutorial==true && !this.shownTutorials.includes("companyLogin"))){
       this.storageService.addToStorageArray("shownTutorials","companyLogin")
-      _satellite.data.customVars["tutorial mode"]="Tutorial Mode"
+      if(this.DTMenabled===true){ _satellite.data.customVars["tutorial mode"]="Tutorial Mode"}
       this.showTutorial()
     }
   
@@ -53,20 +59,32 @@ export class CompanyLoginPage {
       }); 
   }
 
+  showPicTutorial(){
+    var modalPage = this.modalCtrl.create('ModalPage'); modalPage.present();
+    if(this.DTMenabled===true){
+      if(!_satellite.data.customVars["tutorial mode"]){
+        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      }
+      _satellite.data.customVars["tutorial"]="Company Select: API Key"
+      _satellite.track("tutorial");    
+    }    
+  }
+
   loginAPI(credentials){ 
     const loading = this.loadingCtrl.create({
         content: 'Pulling info from the Adobe API, please wait...'
     });
 
     loading.present()
-
-    _satellite.data.customVars["api type"]="company login"
-    _satellite.data.customVars["company"]=this.loginCompany
-    _satellite.track("api attempt")
+    if(this.DTMenabled===true){
+      _satellite.data.customVars["api type"]="company login"
+      _satellite.data.customVars["company"]=this.loginCompany
+      _satellite.track("api attempt")
+    }
 
     let alert = this.alertCtrl.create({
       title: "Something went wrong",
-      message: "We weren't able to communicate with the API- please double check that you have connectivity and that your credentials are valid.",
+      message: "We weren't able to communicate with the API- please double check that you have connectivity and that your credentials are valid.\n\nCredentials should be in the following format: \n\nUsername:  <em>jDoe:Login Company</em>\nShared Secret:  <em>32-digit AA key</em>",
       buttons: [
           {
               text: "Take me back",
@@ -99,20 +117,22 @@ export class CompanyLoginPage {
                 if(this.storageService.companies && !this.storageService.companies.includes(credentials.controls.CompanyName.value)){
                   //only add the company to the companies array if it doesn't yet exist
                   this.storageService.addToStorageArray("companies",credentials.controls.CompanyName.value);
-                  _satellite.data.customVars["api type"]="company login:refresh"
+                  if(this.DTMenabled===true){ _satellite.data.customVars["api type"]="company login:refresh"}
                 }else{
-                  _satellite.data.customVars["api type"]="company login:new"
+                  if(this.DTMenabled===true){_satellite.data.customVars["api type"]="company login:new"}
                 }
                 this.storageService.addToStorageComplex("companyData",credentials.controls.CompanyName.value,companyData)
                 this.storageService.addToStorageSimple("currentCompany",credentials.controls.CompanyName.value)
                 
-                _satellite.track("api success")
+                if(this.DTMenabled===true){_satellite.track("api success")}
                 this.events.publish('showPage:RSList', true);
                 loading.dismiss();
                 this.nav.setRoot(TabsPage, { index: '1' });
             }, error => {
-                _satellite.data.customVars["api error"]=error
-                _satellite.track("api error")
+                if(this.DTMenabled===true){
+                    _satellite.data.customVars["api error"]=error
+                    _satellite.track("api error")
+                }
                 loading.dismiss();
                 console.log(error);
                 alert.present();
@@ -142,17 +162,21 @@ export class CompanyLoginPage {
               }
           ]
       });
+      if(this.DTMenabled===true){
       if(!_satellite.data.customVars["tutorial mode"]){
-        _satellite.data.customVars["tutorial mode"]="Manually Opened"
-      }
-      _satellite.data.customVars["tutorial"]="Company Login: Api Importer"
-      _satellite.track("tutorial");      
+          _satellite.data.customVars["tutorial mode"]="Manually Opened"
+        }
+        _satellite.data.customVars["tutorial"]="Company Login: Api Importer"
+        _satellite.track("tutorial");   
+      }  
       tutorial.present();
   } 
 
   ionViewDidEnter() {
-    _satellite.data.customVars["page name"]="Company Login"
-    _satellite.track("page view");
+    if(this.DTMenabled===true){
+      _satellite.data.customVars["page name"]="Company Login"
+      _satellite.track("page view");
+    }
   }
 
 }

@@ -2,6 +2,7 @@ import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
+
 @Injectable()
 export class StorageServiceProvider {
     currentCompany:any;
@@ -22,7 +23,8 @@ export class StorageServiceProvider {
         this.deeplink=true
         //when the app starts up, pull from storage
         storage.get('tutorial').then((result) => {
-			this.tutorial=result?result:false;
+            this.tutorial=result?result:true;
+            console.log("storage service tutorial",this.tutorial)
 		});
         storage.get('currentCompany').then((result) => {
             this.currentCompany=result?result:'';

@@ -5,9 +5,7 @@
           <ion-icon name="help-circle"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>
-          PocketSDR
-      </ion-title>
+      <ion-title><img src="assets/imgs/bannerlogo.png" style="display:inline-block" alt="logo"/></ion-title>
       <button ion-button menuToggle right>
         <ion-icon name="menu"></ion-icon>
       </button>
@@ -20,19 +18,23 @@
 <ion-content padding>
   <ion-list>
     <form [formGroup]="APIlogin">
+
       <ion-item>
         <ion-label color="primary">Company Name</ion-label>
         <ion-input type="text" formControlName="CompanyName" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Tara Plantation" (change)="checkIfPresent(APIlogin)"></ion-input>
+        
       </ion-item>
 
       <ion-item>
         <ion-label color="primary">Username</ion-label>
         <ion-input type="text" formControlName="Username" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="S.Ohara:Tara Plantation"></ion-input>
+        <ion-icon name="help-circle" color="primary" (click)="showPicTutorial()" item-right></ion-icon>
       </ion-item>
 
       <ion-item>
         <ion-label color="primary">Shared Secret</ion-label>
         <ion-input type="text" formControlName="SharedSecret" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="ee9bf42adfd8f4db4c3570784e55845d"></ion-input>
+        <ion-icon name="help-circle" color="primary" (click)="showPicTutorial()" item-right></ion-icon>
       </ion-item>
     </form>
 

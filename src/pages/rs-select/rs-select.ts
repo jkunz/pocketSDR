@@ -22,12 +22,18 @@ export class RsSelectPage {
   menu:any;
   numberOfSuites:any;
   researchSuites:any;
+  DTMenabled:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public nav:Nav, public storageService: StorageServiceProvider, public storage:Storage, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public apiService: ApiServiceProvider, public events:Events) {
+    if(typeof _satellite=="undefined"){
+      this.DTMenabled=false
+    }else{
+      this.DTMenabled=true
+    }
     this.shownTutorials=this.storageService.shownTutorials
     if(this.storageService.tutorial==true && !this.shownTutorials.includes("RSselect")){
       this.storageService.addToStorageArray("shownTutorials","RSselect")
-      _satellite.data.customVars["tutorial mode"]="Tutorial Mode"      
+      if(this.DTMenabled===true){_satellite.data.customVars["tutorial mode"]="Tutorial Mode"   }   
       this.showTutorial()
     }
   }
@@ -58,13 +64,13 @@ export class RsSelectPage {
     if(isResearched==true){
       this.goToRsDetails(rsid)
     }else{
-      _satellite.data.customVars["api type"]="Report Suite Selection:new"
+      if(this.DTMenabled===true){_satellite.data.customVars["api type"]="Report Suite Selection:new"}
       this.pullRS(rsid)
     }
   }
     
   pullRS(rsid){ 
-    _satellite.track("api attempt")
+    if(this.DTMenabled===true){_satellite.track("api attempt")}
     let loading = this.loadingCtrl.create({
         content: 'Pulling info from the Adobe API, please wait... (this takes a while)'
     });
@@ -168,10 +174,13 @@ export class RsSelectPage {
                     this.researchSuites=this.researchSuites+1
                   }
                 }
-                _satellite.data.customVars["number of RSes"]=this.researchSuites.toString() + "/" + this.listSuites.length.toString() 
-                _satellite.track("api success")
-
+                if(this.DTMenabled===true){
+                  _satellite.data.customVars["number of RSes"]=this.researchSuites.toString() + "/" + this.listSuites.length.toString() 
+                  _satellite.track("api success")
+                }  
                 loading.dismiss();
+                console.log("rsid",JSON.stringify(rsid))
+
                 this.goToRsDetails(rsid)
               }
             )
@@ -180,16 +189,18 @@ export class RsSelectPage {
         this.companyData[this.currentCompany].researchedSuites.push(rsid)
 
     }, error => {
+        if(this.DTMenabled===true){
           _satellite.data.customVars["api error"]=error
           _satellite.track("api error")
-          loading.dismiss();
-          alert.present();
+        }  
+        loading.dismiss();
+        alert.present();
       }); 
 
   }
 
   refreshItem(rsid){
-    _satellite.data.customVars["api type"]="Report Suite Selection:refresh"
+    if(this.DTMenabled===true){_satellite.data.customVars["api type"]="Report Suite Selection:refresh"}
     this.pullRS(rsid)
   }
 
@@ -198,11 +209,13 @@ export class RsSelectPage {
   }
 
   analyticsTrackSearch(val){
-    _satellite.data.customVars["search type"]="report suite selection:search"
-    if(val && val!=""){_satellite.data.customVars["search term"]=val}else{
-      _satellite.data.customVars["search term"]="none entered"
+    if(this.DTMenabled===true){ 
+      _satellite.data.customVars["search type"]="report suite selection:search"
+      if(val && val!=""){_satellite.data.customVars["search term"]=val}else{
+        _satellite.data.customVars["search term"]="none entered"
+      }
+      _satellite.track("search"); 
     }
-    _satellite.track("search"); 
   }
 
   getItems(ev: any) {
@@ -212,12 +225,9 @@ export class RsSelectPage {
     // set val to the value of the searchbar
     let val = ev.target.value;
 
-    let doneTypingInterval="500"
-    let typingTimer = setTimeout(this.analyticsTrackSearch(val), doneTypingInterval);
-    clearTimeout(typingTimer)
-
     // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
+      this.analyticsTrackSearch(val)
       this.listSuites = this.listSuites.filter((item) => {
         return (JSON.stringify(item).toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
@@ -236,24 +246,28 @@ export class RsSelectPage {
           ]
       });
       tutorial.present();
-      if(!_satellite.data.customVars["tutorial mode"]){
-        _satellite.data.customVars["tutorial mode"]="Manually Opened"
+      if(this.DTMenabled===true){
+        if(!_satellite.data.customVars["tutorial mode"]){
+          _satellite.data.customVars["tutorial mode"]="Manually Opened"
+        }
+        _satellite.data.customVars["tutorial"]="Report Suite Select: Refresh an RS"
+        _satellite.track("tutorial");    
       }
-      _satellite.data.customVars["tutorial"]="Report Suite Select: Refresh an RS"
-      _satellite.track("tutorial");     
   } 
 
   fireAnalytics() {
-    _satellite.data.customVars["company"]=this.currentCompany
-    this.researchSuites=0
-    for (var i = 0; i < this.reportSuites.length; i++) {
-      if(this.reportSuites[i].lastUpdated){
-        this.researchSuites=this.researchSuites+1
+    if(this.DTMenabled===true){
+      _satellite.data.customVars["company"]=this.currentCompany
+      this.researchSuites=0
+      for (var i = 0; i < this.reportSuites.length; i++) {
+        if(this.reportSuites[i].lastUpdated){
+          this.researchSuites=this.researchSuites+1
+        }
       }
-    }
-    _satellite.data.customVars["number of RSes"]=this.researchSuites.toString() + "/" + this.listSuites.length.toString() 
-    _satellite.data.customVars["page name"]="Report Suite Selection"
-    _satellite.track("page view");  
+      _satellite.data.customVars["number of RSes"]=this.researchSuites.toString() + "/" + this.listSuites.length.toString() 
+      _satellite.data.customVars["page name"]="Report Suite Selection"
+      _satellite.track("page view");
+    }  
   }
 
   ionViewWillEnter(StorageServiceProvider) { 
