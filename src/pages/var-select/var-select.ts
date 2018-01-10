@@ -20,14 +20,16 @@ export class VarSelectPage {
   currentCompany:any;
   searchTerm: string = '';
   DTMenabled:any;
+  searchQuery:string='';
+  searchBar:any;
 
-  //TODO- "don't see a variable? We only show enabled variables- check that it is enabled and that you are in the right report suite"
   constructor(public navCtrl: NavController, public navParams: NavParams, public storageService: StorageServiceProvider, public storage:Storage, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public events:Events) {
     if(typeof _satellite=="undefined"){
       this.DTMenabled=false
     }else{
       this.DTMenabled=true
     }
+    
   }
 
   initializeVariables() {
@@ -49,16 +51,12 @@ export class VarSelectPage {
     this.initializeVariables();
 
     // set val to the value of the searchbar
-    let val = ev.target.value;
-
-    let doneTypingInterval="500"
-    let typingTimer = setTimeout(this.analyticsTrackSearch(val), doneTypingInterval);
-    clearTimeout(typingTimer)
+    this.searchQuery = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
+    if (this.searchQuery.trim() != '') {
       this.listVariables = this.listVariables.filter((item) => {
-        return (JSON.stringify(item).toLowerCase().indexOf(val.toLowerCase()) > -1);
+        return (JSON.stringify(item).toLowerCase().indexOf(this.searchQuery.toLowerCase()) > -1);
       })
     }
   }
@@ -90,8 +88,14 @@ export class VarSelectPage {
       }
 
       this.variables=this.companyData[this.currentCompany].reportSuites[myIndex].variables ? <Array<Object>> this.companyData[this.currentCompany].reportSuites[myIndex].variables : []
-      console.log("my variables:",JSON.stringify(this.variables));
+      //console.log("my variables:",JSON.stringify(this.variables));
+
       this.initializeVariables();
+      if (this.searchQuery.trim() != '') {
+        this.listVariables = this.listVariables.filter((item) => {
+          return (JSON.stringify(item).toLowerCase().indexOf(this.searchQuery.toLowerCase()) > -1);
+        })
+      }
       this.fireAnalytics()
 
     }else{
@@ -103,16 +107,16 @@ export class VarSelectPage {
   
           let myIndex=0
           for (var i = 0; i < this.companyData[this.currentCompany].reportSuites.length; i++) {
-            console.log("checking RS:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i].rsid))
+            //console.log("checking RS:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i].rsid))
             if(this.companyData[this.currentCompany].reportSuites[i].rsid==currentRS){
               myIndex=i;
-              console.log("this RS matches:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i]))
+              //console.log("this RS matches:",JSON.stringify(this.companyData[this.currentCompany].reportSuites[i]))
               break;
             }
           }
   
           this.variables=this.companyData[this.currentCompany].reportSuites[myIndex].variables ? <Array<Object>> this.companyData[this.currentCompany].reportSuites[myIndex].variables : []
-          console.log("my variables:",JSON.stringify(this.variables));
+          //console.log("my variables:",JSON.stringify(this.variables));
           this.initializeVariables();
           this.fireAnalytics()
         }else{
@@ -126,6 +130,3 @@ export class VarSelectPage {
     }
   }
 }
-
-
-//TODO- empty search when revisiting page (or force it to search)

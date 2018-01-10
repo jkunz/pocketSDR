@@ -25,6 +25,8 @@
       [showCancelButton]="shouldShowCancel"
       (ionInput)="getItems($event)"
       (ionCancel)="onCancel($event)"
+      [(ngModel)]="searchBar"
+      debounce="500"
       placeholder="Filter by...">
   </ion-searchbar>
 </ion-footer>
